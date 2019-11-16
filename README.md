@@ -1,8 +1,6 @@
-# gentown
+# GenTown
 Procedurally generated stuff
-
 # Town Names
-
 Some examples
 ```
 Atomachi
@@ -16,7 +14,7 @@ Eystahala
 Ibabe
 Lake Ebros
 ```
-
 # Town images
-
-... coming soon
+Creates random noise patters based on Name seed currently
+Like this... 
+![random noise](https://github.com/TheRealCodeBeard/gentown/blob/master/images/test.png)
