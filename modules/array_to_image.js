@@ -6,7 +6,7 @@ let get_colour = function(map,index){
     else return map[0];
 };
 
-let generate_image = function(size,colour_map,data,out){
+let generate_image = function(size,colour_map,name,data,out){
     const canvas = createCanvas(size.w, size.h);
     const ctx = canvas.getContext('2d');
     console.log(mod,"Canvas W",size.w,"Canvas H",size.h);
@@ -25,7 +25,12 @@ let generate_image = function(size,colour_map,data,out){
             ctx.fillRect(x*block_w, y*block_h, block_w, block_h);
         }
     }
-    
+    ctx.fillStyle = "rgba(255,255,255,0.5)";
+    ctx.fillRect(5,5,size.w-10,25);
+    ctx.fillStyle = "rgb(0,0,0)";
+    ctx.font = '20px courier';
+    ctx.fillText(name,10, 22);
+
     const stream = canvas.createPNGStream()
     stream.pipe(out);
 };

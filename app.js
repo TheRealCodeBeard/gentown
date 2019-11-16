@@ -16,5 +16,5 @@ let {name,map,colours} = generate_map(generate_name());
 
 console.log(mod,"Creating the image...");
 const out = fs.createWriteStream("./images/map.png");//Will need to be converted to blob
-array_to_image({w:400,h:400},colours,map,out);
+array_to_image({w:400,h:400},colours,name,map,out);
 out.on('finish', () =>  console.log(mod,'Map image created!\n'));

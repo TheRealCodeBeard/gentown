@@ -139,7 +139,7 @@ let generated_map = function(size,rng){
 
 let generate_map = function(name_seed){
     console.log(mod,"Name seed:",name_seed);
-    let size = 100;
+    let size = 50;
     return {
         name:name_seed,
         map:generated_map(size,seedrandom(name_seed)),
