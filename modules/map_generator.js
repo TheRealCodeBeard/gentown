@@ -108,7 +108,7 @@ let repeat = function(times,rng,map,operation){
 let generated_map = function(size,rng){
     let map = initialise_map(size,1);
     map = seed_low_ground(rng,map);
-    map = repeat(5,rng,map,extend_low_ground);
+    map = repeat(10,rng,map,extend_low_ground);
     return map;
 };
 
