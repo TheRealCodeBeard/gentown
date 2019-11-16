@@ -1,5 +1,5 @@
 const { createCanvas, loadImage } = require('canvas');
-let mod = "Image Drawing|"
+let mod = "Image Drawing |"
 
 let get_colour = function(map,index){
     if(index<map.length) return map[index];

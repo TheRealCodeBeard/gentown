@@ -1,3 +1,4 @@
+let mod = "Name Generator |";
 var web_starts = ["Vos","Cal","Bra","La", "Le", "Ben-", "Fra","Min","El","Glam", "Grey-", "Porto-","High-", 
     "Co", "Chri", "Saint-", "Glum-","Has","Fro","Gla","Gli","Blu","Desolate-", "Mysterious-",
     "Ksa","O","A","E", "Stalin", "Lenin", "Haunting-", "Fallow-", "High", "Late", "Lake ", 
@@ -38,7 +39,7 @@ let pick_sets = function()
         [english_starts,english_mids,english_ends]
     ];
     let chosen_set = Math.round(Math.random()*(sets.length-1));
-    console.debug("Set:",chosen_set);
+    console.debug(mod,"Set:",chosen_set);
     let set = sets[chosen_set];
     return {
         starts:set[0],
