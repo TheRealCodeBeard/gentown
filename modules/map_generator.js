@@ -96,17 +96,11 @@ let apply = function(map,func){
 };
 
 let seed_low_ground = function(rng,map){
-    for(var y =0;y<map.length;y++){
-        for(var x=0;x<map[y].length;x++){
-            if(rng()>0.99){
-                map[y][x]=02;
-            }
-        }
-    }
-    return map;
+    return apply(map,function(clone,x,y){
+        if(rng()>0.99) return 02;
+        else return clone[y][x];
+    });
 };
-
-//need to dedupe the looping here.
 
 let extend_low_ground = function(rng,map){
     return apply(map,function(clone,x,y){
