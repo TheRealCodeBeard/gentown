@@ -62,6 +62,18 @@ let contained_by = function(map,x,y,val){
     else return false;
 };
 
+let initialise_map = function(size,index){
+    let base_map = new Array(size);
+    for(var y=0;y<size;y++){
+        if(!base_map[y])base_map[y]=new Array(size);//init if we haven't already
+        for(var x=0;x<size;x++){
+            var colour_index = index;
+            base_map[y][x] = colour_index;
+        }
+    }
+    return base_map;
+};
+
 let make_clone = function(map){
     let clone = new Array(map.length);
     for(var y=0;y<map.length;y++){
@@ -73,16 +85,14 @@ let make_clone = function(map){
     return clone;
 }
 
-let initialise_map = function(size,index){
-    let base_map = new Array(size);
-    for(var y=0;y<size;y++){
-        if(!base_map[y])base_map[y]=new Array(size);//init if we haven't already
-        for(var x=0;x<size;x++){
-            var colour_index = index;
-            base_map[y][x] = colour_index;
+let apply = function(map,func){
+    let clone = make_clone(map);
+    for(var y =0;y<map.length;y++){
+        for(var x=0;x<map[y].length;x++){
+            map[y][x] = func(clone,x,y);
         }
     }
-    return base_map;
+    return map;
 };
 
 let seed_low_ground = function(rng,map){
@@ -99,29 +109,17 @@ let seed_low_ground = function(rng,map){
 //need to dedupe the looping here.
 
 let extend_low_ground = function(rng,map){
-    let clone = make_clone(map);
-    for(var y =0;y<map.length;y++){
-        for(var x=0;x<map[y].length;x++){
-            if(adjacent_to(clone,x,y,02)){
-                if(rng()>0.8){
-                    map[y][x]=02;
-                }
-            }
-        }
-    }
-    return map;
+    return apply(map,function(clone,x,y){
+        if(adjacent_to(clone,x,y,02) && rng()>0.8) return 02;
+        else return clone[y][x];
+    });
 };
 
 let fill_in_low_ground = function(rng,map){
-    let clone = make_clone(map);
-    for(var y =0;y<map.length;y++){
-        for(var x=0;x<map[y].length;x++){
-            if(contained_by(clone,x,y,02)){
-                    map[y][x]=02;
-            }
-        }
-    }
-    return map;
+    return apply(map,function(clone,x,y){
+        if(contained_by(clone,x,y,02)) return 02;
+        else return clone[y][x];
+    });
 };
 
 let repeat = function(times,rng,map,operation){
