@@ -42,12 +42,22 @@ let map_colours =[
     "rgb(rgb(245,245,245)",//06 high mountain
 ];
 
-let adjacent_is = function(map,x,y,val){
+let adjacent_to = function(map,x,y,val){
     if (
         (y>0             && map[y-1][x]===val)
       ||(y<map.length-1  && map[y+1][x]===val)
       ||(x>0             && map[y][x-1]===val)
       ||(x<map[y].length && map[y][x+1]===val)
+        ) return true; 
+    else return false;
+};
+
+let contained_by = function(map,x,y,val){
+    if (
+        (y>0             && map[y-1][x]===val)
+      &&(y<map.length-1  && map[y+1][x]===val)
+      &&(x>0             && map[y][x-1]===val)
+      &&(x<map[y].length && map[y][x+1]===val)
         ) return true; 
     else return false;
 };
@@ -86,14 +96,28 @@ let seed_low_ground = function(rng,map){
     return map;
 };
 
+//need to dedupe the looping here.
+
 let extend_low_ground = function(rng,map){
     let clone = make_clone(map);
     for(var y =0;y<map.length;y++){
         for(var x=0;x<map[y].length;x++){
-            if(adjacent_is(clone,x,y,02)){
+            if(adjacent_to(clone,x,y,02)){
                 if(rng()>0.8){
                     map[y][x]=02;
                 }
+            }
+        }
+    }
+    return map;
+};
+
+let fill_in_low_ground = function(rng,map){
+    let clone = make_clone(map);
+    for(var y =0;y<map.length;y++){
+        for(var x=0;x<map[y].length;x++){
+            if(contained_by(clone,x,y,02)){
+                    map[y][x]=02;
             }
         }
     }
@@ -109,6 +133,7 @@ let generated_map = function(size,rng){
     let map = initialise_map(size,1);
     map = seed_low_ground(rng,map);
     map = repeat(10,rng,map,extend_low_ground);
+    map = repeat(10,rng,map,fill_in_low_ground);
     return map;
 };
 
