@@ -17,4 +17,6 @@ Ibabe
 Lake Ebros
 ```
 
-Then town images
+# Town images
+
+... coming soon
