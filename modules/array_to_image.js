@@ -1,20 +1,31 @@
 const { createCanvas, loadImage } = require('canvas');
+let mod = "Image Drawing|"
 
-let generate_image = function(data,out){
+let get_colour = function(map,index){
+    if(index<map.length) return map[index];
+    else return map[0];
+};
+
+let generate_image = function(size,colour_map,data,out){
+    const canvas = createCanvas(size.w, size.h);
+    const ctx = canvas.getContext('2d');
+    console.log(mod,"Canvas W",size.w,"Canvas H",size.h);
+
     let data_h = data.length;
     let data_w = data[0].length;
+    console.log(mod,"Data W",data_w,"Data H",data_h);
 
-    const canvas = createCanvas(data_w, data_h);
-    const ctx = canvas.getContext('2d');
-    
+    let block_w = size.w/data_w;
+    let block_h = size.h/data_h;
+    console.log(mod,"Block W",block_w,"Block H",block_h);
+
     for(var y=0;y<data.length;y++){
         for(var x=0;x<data[y].length;x++){
-            if(data[y][x]===0) ctx.fillStyle = "rgb(0,0,0)";
-            else ctx.fillStyle = "rgb(255,255,255)";
-            ctx.fillRect(x, y, 1, 1);
+            ctx.fillStyle = get_colour(colour_map,data[y][x]);
+            ctx.fillRect(x+(x*block_w), y+(y*block_h), block_w, block_h);
         }
     }
-    console.log("Data W",data_w,"Data H",data_h);
+    
     const stream = canvas.createPNGStream()
     stream.pipe(out);
 };
