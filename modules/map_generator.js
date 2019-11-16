@@ -11,7 +11,7 @@ const image_data = [
     [3,3,3,3,3,3,3]
 ];
 
-//could change this for a sprite map.
+//could change this for a sprite map?
 const colours = [
     "rgb(0,0,0)",// 0 is Default colour
     "rgb(255,255,255)",
@@ -31,13 +31,94 @@ let random_map = function(size,rng){
     return random_image;
 };
 
+//Need to fill in look up stuff here.
+let map_colours =[
+    "rgb(0,0,0)",          //00 black
+    "rgb(245,222,179)",    //01 ground
+    "rgb(225,202,159)",    //02 low ground
+    "rgb(255,232,189)",    //03 higher ground
+    "rgb(255,252,189)",    //04 hill
+    "rgb(rgb(235,235,235)",//05 mountain
+    "rgb(rgb(245,245,245)",//06 high mountain
+];
+
+let adjacent_is = function(map,x,y,val){
+    if (
+        (y>0             && map[y-1][x]===val)
+      ||(y<map.length-1  && map[y+1][x]===val)
+      ||(x>0             && map[y][x-1]===val)
+      ||(x<map[y].length && map[y][x+1]===val)
+        ) return true; 
+    else return false;
+};
+
+let make_clone = function(map){
+    let clone = new Array(map.length);
+    for(var y=0;y<map.length;y++){
+        if(!clone[y])clone[y]=new Array(map[y].length);
+        for(var x=0;x<map[y].length;x++){
+            clone[y][x]=map[y][x];
+        }
+    }
+    return clone;
+}
+
+let initialise_map = function(size,index){
+    let base_map = new Array(size);
+    for(var y=0;y<size;y++){
+        if(!base_map[y])base_map[y]=new Array(size);//init if we haven't already
+        for(var x=0;x<size;x++){
+            var colour_index = index;
+            base_map[y][x] = colour_index;
+        }
+    }
+    return base_map;
+};
+
+let seed_low_ground = function(rng,map){
+    for(var y =0;y<map.length;y++){
+        for(var x=0;x<map[y].length;x++){
+            if(rng()>0.99){
+                map[y][x]=02;
+            }
+        }
+    }
+    return map;
+};
+
+let extend_low_ground = function(rng,map){
+    let clone = make_clone(map);
+    for(var y =0;y<map.length;y++){
+        for(var x=0;x<map[y].length;x++){
+            if(adjacent_is(clone,x,y,02)){
+                if(rng()>0.8){
+                    map[y][x]=02;
+                }
+            }
+        }
+    }
+    return map;
+};
+
+let repeat = function(times,rng,map,operation){
+    for(var i=0;i<times;i++){map = operation(rng,map);}
+    return map;
+};
+
+let generated_map = function(size,rng){
+    let map = initialise_map(size,1);
+    map = seed_low_ground(rng,map);
+    map = repeat(5,rng,map,extend_low_ground);
+    return map;
+};
+
 let generate_map = function(name_seed){
     console.log(mod,"Name seed:",name_seed);
-    let size = 150;
+    let size = 100;
     return {
         name:name_seed,
-        map:random_map(size,seedrandom(name_seed)),
-        colours:colours
+        map:generated_map(size,seedrandom(name_seed)),
+        colours:map_colours,
     };
 };
 
