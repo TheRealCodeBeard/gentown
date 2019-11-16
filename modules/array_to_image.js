@@ -15,14 +15,14 @@ let generate_image = function(size,colour_map,data,out){
     let data_w = data[0].length;
     console.log(mod,"Data W",data_w,"Data H",data_h);
 
-    let block_w = size.w/data_w;
-    let block_h = size.h/data_h;
+    let block_w = Math.ceil(size.w/data_w);
+    let block_h = Math.ceil(size.h/data_h);
     console.log(mod,"Block W",block_w,"Block H",block_h);
 
     for(var y=0;y<data.length;y++){
         for(var x=0;x<data[y].length;x++){
             ctx.fillStyle = get_colour(colour_map,data[y][x]);
-            ctx.fillRect(x+(x*block_w), y+(y*block_h), block_w, block_h);
+            ctx.fillRect(x*block_w, y*block_h, block_w, block_h);
         }
     }
     
