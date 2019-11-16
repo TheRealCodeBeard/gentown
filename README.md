@@ -1,6 +1,20 @@
 # gentown
 Procedurally generated stuff
 
-First town names 
+# Town Names
+
+Some examples
+```
+Atomachi
+Akiyayama
+Ika shima
+Bridlingpool
+Scarer River
+Braprenoc
+Kyoyabe
+Eystahala
+Ibabe
+Lake Ebros
+```
 
 Then town images
