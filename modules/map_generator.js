@@ -34,13 +34,13 @@ let random_map = function(size,rng){
 
 //Need to fill in look up stuff here.
 let map_colours =[
-    "rgb(0,0,0)",          //00 black
-    "rgb(245,222,179)",    //01 ground
-    "rgb(225,202,159)",    //02 low ground
-    "rgb(245,242,199)",    //03 higher ground
-    "rgb(235,252,169)",    //04 hill
-    "rgb(rgb(235,235,235)",//05 mountain
-    "rgb(rgb(245,245,245)",//06 high mountain
+    "rgb(000,000,000)",//00 black
+    "rgb(245,222,179)",//01 ground
+    "rgb(225,202,159)",//02 low ground
+    "rgb(245,242,199)",//03 higher ground
+    "rgb(235,252,169)",//04 hill
+    "rgb(215,215,215)",//05 mountain
+    "rgb(235,235,235)",//06 high mountain
 ];
 
 //handy references to the colours above
@@ -100,26 +100,24 @@ let adjacent_to = function(map,x,y,val){
 };
 
 //Returns true if x,y is fully surounded by val (n,s,e,w)
-let contained_by = function(map,x,y,val){
-    if (
-        (y>0             && map[y-1][x]===val)
-      &&(y<map.length-1  && map[y+1][x]===val)
-      &&(x>0             && map[y][x-1]===val)
-      &&(x<map[y].length && map[y][x+1]===val)
-        ) return true; 
-    else return false;
+let contained_by = function(map,x,y,val,sides){
+    sides = sides ? sides : 4;
+    let s = 0;
+    if(y>0 && map[y-1][x]===val) s+=1;
+    if(y<map.length-1 && map[y+1][x]===val) s+=1;
+    if(x>0 && map[y][x-1]===val) s+=1;
+    if(x<map[y].length && map[y][x+1]===val) s+=1;
+    return s===sides;
 };
 
 //Abstracting use of rng(). Makes more fluent map operations
 let maybe = function(chance,a,b){
-    if(rng()<chance) return a;
-    else return b;
+    return rng()<chance ? a : b;
 };
 
 //Abstracting use of proximity functions. Makes more fluent map operations
 let if_maybe = function(choice,chance,a,b){
-    if(choice) return maybe(chance,a,b);
-    else return b;
+    return choice ? maybe(chance,a,b) : b;
 }
 
 let is = function(val,wanted){
@@ -132,28 +130,37 @@ let is = function(val,wanted){
     SOMETHING must return a value for x,y.
 */
 
-let seed_element = function(map,el,base){
+let seed_element = function(map,el,test){
     return apply(map,(clone,x,y)=>if_maybe(
-                                        is(clone[y][x],base),
+                                        test(clone[y][x]),
                                         0.01,el,clone[y][x]
                                 )
                 );
 };
 
-let extend_element = function(map,el,base){
+let extend_element = function(map,el,test){
     return apply(map,(clone,x,y)=>if_maybe(
-                                    is(clone[y][x],base)
+                                    test(clone[y][x])
                                     && adjacent_to(clone,x,y,el),
                                     0.2,el,clone[y][x]
                                 )
                 );
 };
 
-let fill_in_element = function(map,el,base){
+let fill_in_element = function(map,el,test,sides){
     return apply(map,(clone,x,y)=>if_maybe(
-                                    is(clone[y][x],base)
-                                    && contained_by(clone,x,y,el),
+                                    test(clone[y][x])
+                                    && contained_by(clone,x,y,el,sides),
                                     1,el,clone[y][x]
+                                )
+                );
+};
+
+let fill_in_other = function(map,el,test,other){
+    return apply(map,(clone,x,y)=>if_maybe(
+                                    test(clone[y][x])
+                                    && contained_by(clone,x,y,other),
+                                    0.5,el,clone[y][x]
                                 )
                 );
 };
@@ -164,11 +171,19 @@ let repeat = function(times,map,operation,el,base){
     return map;
 };
 
-let seed_extend_fill = function(map,el,base){
-    map = seed_element(map,el,base);
-    map = repeat(10,map,extend_element,el,base);
-    map = fill_in_element(map,el,base);
+let seed_extend_fill = function(map,el,test,r){
+    let reps = r ? r : 10;
+    map = seed_element(map,el,test);
+    map = repeat(reps,map,extend_element,el,test);
+    map = fill_in_element(map,el,test);
     return map;
+};
+
+let is_any = function(val,a,b,c,d){//need js parameter magic here
+     return a && val === a 
+            || b && val === b
+            || c && val === c
+            || d && val === d;
 };
 
 /* END OF map operations */
@@ -176,17 +191,21 @@ let seed_extend_fill = function(map,el,base){
 //This kind of function organises a set of map operations in order
 let generated_map = function(size){
     let map = initialise_map(size,GROUND);
-    map = seed_extend_fill(map,LOW_GROUND,GROUND);
-    map = seed_extend_fill(map,HIGH_GROUND,GROUND);
-    map = seed_extend_fill(map,HILL,GROUND);
+    map = seed_extend_fill(map,LOW_GROUND,(v)=>is(v,GROUND),10);
+    map = seed_extend_fill(map,HIGH_GROUND,(v)=>is(v,GROUND),20);
+    map = seed_extend_fill(map,HILL,(v)=>is_any(v,GROUND,HIGH_GROUND),15);
+    map = seed_extend_fill(map,MOUNTAIN,(v)=>is_any(v,HIGH_GROUND,HILL),15);
+
+    map = fill_in_other(map,HIGH_MOUNTAIN,(v)=>is_any(v,HILL,MOUNTAIN),MOUNTAIN);
+    map = fill_in_element(map,HIGH_MOUNTAIN,(v)=>is(v,MOUNTAIN),3);
     return map;
 };
 
 //Export the result of the above.
 module.exports =  function(name_seed){
     console.log(mod,"Name seed:",name_seed);
-    let size = 50;
-    rng = seedrandom(name_seed);//Temporal coupling
+    let size = 100;
+    rng = seedrandom(name_seed);//Temporal coupling?
     return {
         name:name_seed,
         map:generated_map(size),
