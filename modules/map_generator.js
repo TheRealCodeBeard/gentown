@@ -37,11 +37,20 @@ let map_colours =[
     "rgb(0,0,0)",          //00 black
     "rgb(245,222,179)",    //01 ground
     "rgb(225,202,159)",    //02 low ground
-    "rgb(255,232,189)",    //03 higher ground
-    "rgb(255,252,189)",    //04 hill
+    "rgb(245,242,199)",    //03 higher ground
+    "rgb(235,252,169)",    //04 hill
     "rgb(rgb(235,235,235)",//05 mountain
     "rgb(rgb(245,245,245)",//06 high mountain
 ];
+
+//handy references to the colours above
+const BLACK = 0;
+const GROUND = 1;
+const LOW_GROUND = 2;
+const HIGH_GROUND = 3;
+const HILL = 4;
+const MOUNTAIN = 5;
+const HIGH_MOUNTAIN =6;
 
 //Creates a base map of a single colour specified by index
 let initialise_map = function(size,index){
@@ -113,38 +122,63 @@ let if_maybe = function(choice,chance,a,b){
     else return b;
 }
 
+let is = function(val,wanted){
+    return val === wanted;      
+};
+
 /*
     From here are map operations. They change the map array values and return the array.
     They call 'apply(map,(clone,x,y)=>SOMETHING) to do this. 
     SOMETHING must return a value for x,y.
 */
 
-let seed_low_ground = function(map){
-    return apply(map,(clone,x,y)=>maybe(0.01,02,clone[y][x]));
+let seed_element = function(map,el,base){
+    return apply(map,(clone,x,y)=>if_maybe(
+                                        is(clone[y][x],base),
+                                        0.01,el,clone[y][x]
+                                )
+                );
 };
 
-let extend_low_ground = function(map){
-    return apply(map,(clone,x,y)=>if_maybe(adjacent_to(clone,x,y,02),0.2,02,clone[y][x]));
+let extend_element = function(map,el,base){
+    return apply(map,(clone,x,y)=>if_maybe(
+                                    is(clone[y][x],base)
+                                    && adjacent_to(clone,x,y,el),
+                                    0.2,el,clone[y][x]
+                                )
+                );
 };
 
-let fill_in_low_ground = function(map){
-    return apply(map,(clone,x,y)=>if_maybe(contained_by(clone,x,y,02),1,02,clone[y][x]));
+let fill_in_element = function(map,el,base){
+    return apply(map,(clone,x,y)=>if_maybe(
+                                    is(clone[y][x],base)
+                                    && contained_by(clone,x,y,el),
+                                    1,el,clone[y][x]
+                                )
+                );
+};
+
+//Utility function to allow easy repeats of operations on the map
+let repeat = function(times,map,operation,el,base){
+    for(var i=0;i<times;i++){ map = operation(map,el,base); }
+    return map;
+};
+
+let seed_extend_fill = function(map,el,base){
+    map = seed_element(map,el,base);
+    map = repeat(10,map,extend_element,el,base);
+    map = fill_in_element(map,el,base);
+    return map;
 };
 
 /* END OF map operations */
 
-//Utility function to allow easy repeats of operations on the map
-let repeat = function(times,map,operation){
-    for(var i=0;i<times;i++){ map = operation(map); }
-    return map;
-};
-
 //This kind of function organises a set of map operations in order
 let generated_map = function(size){
-    let map = initialise_map(size,1);
-    map = seed_low_ground(map);
-    map = repeat(10,map,extend_low_ground);
-    map = fill_in_low_ground(map);
+    let map = initialise_map(size,GROUND);
+    map = seed_extend_fill(map,LOW_GROUND,GROUND);
+    map = seed_extend_fill(map,HIGH_GROUND,GROUND);
+    map = seed_extend_fill(map,HILL,GROUND);
     return map;
 };
 
