@@ -1,5 +1,6 @@
 const seedrandom = require('seedrandom');
 let mod = "Map Generator |";
+let rng = null;//Probably need a better way of doing this. Class instance?
 
 const image_data = [
     [3,3,3,3,3,3,3],
@@ -95,46 +96,48 @@ let apply = function(map,func){
     return map;
 };
 
-let seed_low_ground = function(rng,map){
-    return apply(map,function(clone,x,y){
-        if(rng()>0.99) return 02;
-        else return clone[y][x];
-    });
+let maybe = function(chance,a,b){
+    if(rng()<chance) return a;
+    else return b;
 };
 
-let extend_low_ground = function(rng,map){
-    return apply(map,function(clone,x,y){
-        if(adjacent_to(clone,x,y,02) && rng()>0.8) return 02;
-        else return clone[y][x];
-    });
+let if_maybe = function(choice,chance,a,b){
+    if(choice) return maybe(chance,a,b);
+    else return b;
+}
+
+let seed_low_ground = function(map){
+    return apply(map,(clone,x,y)=>maybe(0.01,02,clone[y][x]));
 };
 
-let fill_in_low_ground = function(rng,map){
-    return apply(map,function(clone,x,y){
-        if(contained_by(clone,x,y,02)) return 02;
-        else return clone[y][x];
-    });
+let extend_low_ground = function(map){
+    return apply(map,(clone,x,y)=>if_maybe(adjacent_to(clone,x,y,02),0.2,02,clone[y][x]));
 };
 
-let repeat = function(times,rng,map,operation){
-    for(var i=0;i<times;i++){map = operation(rng,map);}
+let fill_in_low_ground = function(map){
+    return apply(map,(clone,x,y)=>if_maybe(contained_by(clone,x,y,02),1,02,clone[y][x]));
+};
+
+let repeat = function(times,map,operation){
+    for(var i=0;i<times;i++){map = operation(map);}
     return map;
 };
 
-let generated_map = function(size,rng){
+let generated_map = function(size){
     let map = initialise_map(size,1);
-    map = seed_low_ground(rng,map);
-    map = repeat(10,rng,map,extend_low_ground);
-    map = repeat(10,rng,map,fill_in_low_ground);
+    map = seed_low_ground(map);
+    map = repeat(10,map,extend_low_ground);
+    map = fill_in_low_ground(map);
     return map;
 };
 
 let generate_map = function(name_seed){
     console.log(mod,"Name seed:",name_seed);
     let size = 50;
+    rng = seedrandom(name_seed);//Temporal coupling
     return {
         name:name_seed,
-        map:generated_map(size,seedrandom(name_seed)),
+        map:generated_map(size),
         colours:map_colours,
     };
 };
