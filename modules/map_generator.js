@@ -43,26 +43,7 @@ let map_colours =[
     "rgb(rgb(245,245,245)",//06 high mountain
 ];
 
-let adjacent_to = function(map,x,y,val){
-    if (
-        (y>0             && map[y-1][x]===val)
-      ||(y<map.length-1  && map[y+1][x]===val)
-      ||(x>0             && map[y][x-1]===val)
-      ||(x<map[y].length && map[y][x+1]===val)
-        ) return true; 
-    else return false;
-};
-
-let contained_by = function(map,x,y,val){
-    if (
-        (y>0             && map[y-1][x]===val)
-      &&(y<map.length-1  && map[y+1][x]===val)
-      &&(x>0             && map[y][x-1]===val)
-      &&(x<map[y].length && map[y][x+1]===val)
-        ) return true; 
-    else return false;
-};
-
+//Creates a base map of a single colour specified by index
 let initialise_map = function(size,index){
     let base_map = new Array(size);
     for(var y=0;y<size;y++){
@@ -75,6 +56,7 @@ let initialise_map = function(size,index){
     return base_map;
 };
 
+//We need clones so that the passes don't affect themselves
 let make_clone = function(map){
     let clone = new Array(map.length);
     for(var y=0;y<map.length;y++){
@@ -84,8 +66,9 @@ let make_clone = function(map){
         }
     }
     return clone;
-}
+};
 
+//Generalisation to make each map operations easier to write
 let apply = function(map,func){
     let clone = make_clone(map);
     for(var y =0;y<map.length;y++){
@@ -96,15 +79,45 @@ let apply = function(map,func){
     return map;
 };
 
+//Returns true if x,y is adjecent to val (n,s,e,w)
+let adjacent_to = function(map,x,y,val){
+    if (
+        (y>0             && map[y-1][x]===val)
+      ||(y<map.length-1  && map[y+1][x]===val)
+      ||(x>0             && map[y][x-1]===val)
+      ||(x<map[y].length && map[y][x+1]===val)
+        ) return true; 
+    else return false;
+};
+
+//Returns true if x,y is fully surounded by val (n,s,e,w)
+let contained_by = function(map,x,y,val){
+    if (
+        (y>0             && map[y-1][x]===val)
+      &&(y<map.length-1  && map[y+1][x]===val)
+      &&(x>0             && map[y][x-1]===val)
+      &&(x<map[y].length && map[y][x+1]===val)
+        ) return true; 
+    else return false;
+};
+
+//Abstracting use of rng(). Makes more fluent map operations
 let maybe = function(chance,a,b){
     if(rng()<chance) return a;
     else return b;
 };
 
+//Abstracting use of proximity functions. Makes more fluent map operations
 let if_maybe = function(choice,chance,a,b){
     if(choice) return maybe(chance,a,b);
     else return b;
 }
+
+/*
+    From here are map operations. They change the map array values and return the array.
+    They call 'apply(map,(clone,x,y)=>SOMETHING) to do this. 
+    SOMETHING must return a value for x,y.
+*/
 
 let seed_low_ground = function(map){
     return apply(map,(clone,x,y)=>maybe(0.01,02,clone[y][x]));
@@ -118,11 +131,15 @@ let fill_in_low_ground = function(map){
     return apply(map,(clone,x,y)=>if_maybe(contained_by(clone,x,y,02),1,02,clone[y][x]));
 };
 
+/* END OF map operations */
+
+//Utility function to allow easy repeats of operations on the map
 let repeat = function(times,map,operation){
-    for(var i=0;i<times;i++){map = operation(map);}
+    for(var i=0;i<times;i++){ map = operation(map); }
     return map;
 };
 
+//This kind of function organises a set of map operations in order
 let generated_map = function(size){
     let map = initialise_map(size,1);
     map = seed_low_ground(map);
@@ -131,7 +148,8 @@ let generated_map = function(size){
     return map;
 };
 
-let generate_map = function(name_seed){
+//Export the result of the above.
+module.exports =  function(name_seed){
     console.log(mod,"Name seed:",name_seed);
     let size = 50;
     rng = seedrandom(name_seed);//Temporal coupling
@@ -141,5 +159,3 @@ let generate_map = function(name_seed){
         colours:map_colours,
     };
 };
-
-module.exports = generate_map
