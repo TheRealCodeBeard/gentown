@@ -41,7 +41,7 @@ let map_colours =[
     "rgb(245,222,199)",//04 hill
     "rgb(215,215,215)",//05 mountain
     "rgb(235,235,235)",//06 high mountain
-    "rgb(255,000,000)"//"rgb(170,170,245)"//07 water
+    "rgb(170,170,245)"//07 water
 ];
 
 //handy references to the colours above
