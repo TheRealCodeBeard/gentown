@@ -42,7 +42,8 @@ let map_colours =[
     "rgb(215,215,215)",//05 mountain
     "rgb(235,235,235)",//06 high mountain
     "rgb(170,170,245)",//07 river
-    "rgb(160,160,235)" //08 lake
+    "rgb(160,160,235)",//08 lake
+    "rgb(140,140,215)" //09 deep lake
 ];
 
 //handy references to the colours above
@@ -55,6 +56,7 @@ const MOUNTAIN = 5;
 const HIGH_MOUNTAIN = 6;
 const RIVER = 7;
 const LAKE = 8;
+const DEEP_LAKE = 9;
 
 //Creates a base map of a single colour specified by index
 let initialise_map = function(size,index){
@@ -237,6 +239,8 @@ let generate_mountain = function(map){
 let generate_lake = function(map){
     map = seed_element(map,LAKE,(v)=>is(v,LOW_GROUND),0.005);
     map = repeat(50,map,flood_fill_element,LAKE,(v)=>is(v,LOW_GROUND));
+    map = fill_in_other(map,DEEP_LAKE,(v)=>is(v,LAKE),LAKE);
+    map = fill_in_element(map,DEEP_LAKE,(v)=>is(v,LAKE),2);
     return map;
 };
 
