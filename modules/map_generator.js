@@ -132,6 +132,13 @@ let is = function(val,wanted){
     SOMETHING must return a value for x,y.
 */
 
+let distance_between = function(x,y,ax,ay){
+    var sq= function(x){return x*x;};
+    if(!x && !y) return true;
+    var measured = Math.sqrt(sq(ay-y)+sq(ax-x));
+    return measured;
+};
+
 let seed_element = function(map,el,test,chance){
     chance = chance ? chance : 0.01;
     return apply(map,(clone,x,y)=>if_maybe(
@@ -141,13 +148,14 @@ let seed_element = function(map,el,test,chance){
                 );
 };
 
-let seed_element_once = function(map,el,test,chance){
+let seed_element_once = function(map,el,test,chance,location_capture){
     chance = chance ? chance : 0.01;
     let seeded = false;
     let seed = (clone,x,y)=>{
         if(!seeded && test(clone[y][x])){
             return maybe(chance,()=>{
                 seeded = true;
+                if(location_capture)location_capture(x,y);
                 return el;
             },()=>clone[y][x])();
         } else return clone[y][x];
@@ -221,7 +229,9 @@ let generate_mountain = function(map){
 
 let generate_river = function(map){
     let seeded = false;
-    map = seed_element_once(map,WATER,(v)=>is(v,MOUNTAIN),0.002);
+    let ox,oy=null;
+    map = seed_element_once(map,WATER,(v)=>is(v,MOUNTAIN),0.002,(x,y)=>{ox=x;oy=y;});
+    console.log(mod,"River location",ox,oy);
     return map;
 };
 
