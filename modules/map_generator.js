@@ -45,7 +45,9 @@ let map_colours =[
     "rgb(160,160,235)",//08 lake
     "rgb(140,140,215)",//09 deep lake
     "rgb(150,225,150)",//10 grass
-    "rgb(250,250,200)" //11 sand
+    "rgb(250,250,200)",//11 sand
+    "rgb(120,195,120)",//12 trees
+
 ];
 
 //handy references to the colours above
@@ -61,6 +63,7 @@ const LAKE = 8;
 const DEEP_LAKE = 9;
 const GRASS = 10;
 const SAND = 11;
+const TREES = 12;
 
 //Creates a base map of a single colour specified by index
 let initialise_map = function(size,index){
@@ -276,6 +279,11 @@ let generate_grass = function(map){
     return map;
 };
 
+let generate_trees = function(map){
+    map = seed_element(map,TREES,(v)=>is(v,GRASS),0.3);
+    return map;
+};
+
 let generate_sand = function(map){
     map = seed_element_next_to(map,SAND,(v)=>is_any(v,GROUND,LOW_GROUND),LAKE,0.2);
     map = repeat(15,map,extend_element,SAND,(v)=>is_any(v,GROUND,LOW_GROUND));
@@ -290,6 +298,7 @@ let generated_map = function(size){
     map = generate_river(map);
     map = generate_lake(map);
     map = generate_grass(map);
+    map = generate_trees(map);
     map = generate_sand(map);
     return map;
 };
