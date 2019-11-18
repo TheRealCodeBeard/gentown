@@ -39,11 +39,12 @@ let map_colours =[
     "rgb(215,192,149)",//02 low ground
     "rgb(245,222,179)",//03 higher ground
     "rgb(245,222,199)",//04 hill
-    "rgb(215,215,215)",//05 mountain
-    "rgb(235,235,235)",//06 high mountain
+    "rgb(175,175,175)",//05 mountain
+    "rgb(195,195,195)",//06 high mountain
     "rgb(170,170,245)",//07 river
     "rgb(160,160,235)",//08 lake
-    "rgb(140,140,215)" //09 deep lake
+    "rgb(140,140,215)",//09 deep lake
+    "rgb(150,225,150)" //10 grass
 ];
 
 //handy references to the colours above
@@ -57,6 +58,7 @@ const HIGH_MOUNTAIN = 6;
 const RIVER = 7;
 const LAKE = 8;
 const DEEP_LAKE = 9;
+const GRASS = 10;
 
 //Creates a base map of a single colour specified by index
 let initialise_map = function(size,index){
@@ -167,12 +169,22 @@ let seed_element_once = function(map,el,test,chance,location_capture){
     return apply(map,seed);
 };
 
+let seed_element_next_to = function(map,el,test,next,chance){
+    chance = chance ? chance:0.01;
+    return apply(map,(clone,x,y)=>if_maybe(
+                                    test(clone[y][x])
+                                    && adjacent_to(clone,x,y,next),
+                                    chance,el,clone[y][x]
+                                )
+                );
+};
+
 let extend_element = function(map,el,test,chance){
     chance = chance ? chance:0.2;
     return apply(map,(clone,x,y)=>if_maybe(
                                     test(clone[y][x])
                                     && adjacent_to(clone,x,y,el),
-                                    0.2,el,clone[y][x]
+                                    chance,el,clone[y][x]
                                 )
                 );
 };
@@ -255,6 +267,13 @@ let generate_river = function(map){
     return map;
 };
 
+let generate_grass = function(map){
+    map = seed_element_next_to(map,GRASS,(v)=>is_any(v,GROUND,HIGH_GROUND,HILL),LAKE,0.2);
+    map = repeat(15,map,extend_element,GRASS,(v)=>is_any(v,GROUND,HIGH_GROUND,HILL));
+    map = fill_in_element(map,GRASS,(v)=>is_any(v,GROUND,HIGH_GROUND,HILL),3);
+    return map;
+};
+
 //This kind of function organises a set of map operations in order
 let generated_map = function(size){
     let map = initialise_map(size,GROUND);
@@ -262,6 +281,7 @@ let generated_map = function(size){
     map = generate_mountain(map);
     map = generate_river(map);
     map = generate_lake(map);
+    map = generate_grass(map);
     return map;
 };
 
