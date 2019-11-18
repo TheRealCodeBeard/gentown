@@ -35,10 +35,10 @@ let random_map = function(size,rng){
 //Need to fill in look up stuff here.
 let map_colours =[
     "rgb(000,000,000)",//00 black
-    "rgb(245,222,179)",//01 ground
-    "rgb(225,202,159)",//02 low ground
-    "rgb(245,242,199)",//03 higher ground
-    "rgb(235,252,169)",//04 hill
+    "rgb(225,202,159)",//01 ground
+    "rgb(215,192,149)",//02 low ground
+    "rgb(245,222,179)",//03 higher ground
+    "rgb(245,222,199)",//04 hill
     "rgb(215,215,215)",//05 mountain
     "rgb(235,235,235)",//06 high mountain
 ];
