@@ -41,7 +41,8 @@ let map_colours =[
     "rgb(245,222,199)",//04 hill
     "rgb(215,215,215)",//05 mountain
     "rgb(235,235,235)",//06 high mountain
-    "rgb(170,170,245)"//07 water
+    "rgb(170,170,245)",//07 river
+    "rgb(160,160,235)" //08 lake
 ];
 
 //handy references to the colours above
@@ -52,7 +53,8 @@ const HIGH_GROUND = 3;
 const HILL = 4;
 const MOUNTAIN = 5;
 const HIGH_MOUNTAIN = 6;
-const WATER = 7;
+const RIVER = 7;
+const LAKE = 8;
 
 //Creates a base map of a single colour specified by index
 let initialise_map = function(size,index){
@@ -163,13 +165,18 @@ let seed_element_once = function(map,el,test,chance,location_capture){
     return apply(map,seed);
 };
 
-let extend_element = function(map,el,test){
+let extend_element = function(map,el,test,chance){
+    chance = chance ? chance:0.2;
     return apply(map,(clone,x,y)=>if_maybe(
                                     test(clone[y][x])
                                     && adjacent_to(clone,x,y,el),
                                     0.2,el,clone[y][x]
                                 )
                 );
+};
+
+let flood_fill_element = function(map,el,test){
+    return extend_element(map,el,test,1.0);
 };
 
 let fill_in_element = function(map,el,test,sides){
@@ -227,11 +234,20 @@ let generate_mountain = function(map){
     return map;
 };
 
+let generate_lake = function(map){
+    map = seed_element(map,LAKE,(v)=>is(v,LOW_GROUND),0.005);
+    map = repeat(50,map,flood_fill_element,LAKE,(v)=>is(v,LOW_GROUND));
+    return map;
+};
+
 let generate_river = function(map){
     let seeded = false;
     let ox,oy=null;
-    map = seed_element_once(map,WATER,(v)=>is(v,MOUNTAIN),0.002,(x,y)=>{ox=x;oy=y;});
-    console.log(mod,"River location",ox,oy);
+    let ex,ey=null;
+    map = seed_element_once(map,RIVER,
+        (v)=>is(v,MOUNTAIN),0.002,
+        (x,y)=>{ox=x;oy=y;});
+    console.log(mod,"River origin",ox,oy);
     return map;
 };
 
@@ -241,6 +257,7 @@ let generated_map = function(size){
     map = generate_land(map);
     map = generate_mountain(map);
     map = generate_river(map);
+    map = generate_lake(map);
     return map;
 };
 
