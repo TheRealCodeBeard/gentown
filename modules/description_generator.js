@@ -1,5 +1,6 @@
 const seedrandom = require('seedrandom');
 let rng = null;
+const mod = "Description | "; 
 
 let choose_from = function(list){
     return list[Math.round(rng()*(list.length-1))];
@@ -62,9 +63,29 @@ let population = function(){
     return `Population ${pop}`;
 };
 
+let peoples = function(){
+    let activities = ["art","theatre","science",
+            "animal husbandry","farming","pottery","political system",
+            "smell","height","religion","shamanism","morals","philosophy"
+    ];
+    let names_start = ["Ta","Ma","Da","Kla","Engli","Ge","Ita","Fro","Cro"];
+    let names_mid = ["no","gra","fla","offo","deeka","ra","dja","ti","clu","ban"];
+    let names_end = ["fun","san","brok","boc","lain","ho","crop","po","la"];
+    let about = `Renound for their ${choose_from(activities)}, `;
+    let name = choose_from(names_start) + choose_from(names_mid) + choose_from(names_end);
+    about += `the ${name} peoples are often described as ${choose_from(adjectives)}`;
+    return about;
+};
+
 let generate = function(name_seed){
     rng = seedrandom(name_seed);
-    var description = `${basic(name_seed)}.\n${history()}.`;
+    let describers = [
+        history,
+        peoples,
+    ];
+    var description = `${basic(name_seed)}.`;
+    describers.forEach((d)=>description = `${description}\n${d()}.`);
+    console.log(mod,"Description Length:",description.length);
     return description;
 }
 
