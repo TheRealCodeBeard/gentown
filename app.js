@@ -13,7 +13,7 @@ console.log(mod,generate_name());
 
 console.log(mod,"Generating a map...");
 let generated_name = generate_name();
-generated_name = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+//generated_name = "ABCDEFGHIJKLM-NOPQRSTUVWX YZ";//for testing writing
 let {name,map,colours} = generate_map(generated_name);
 
 console.log(mod,"Creating the image...");
