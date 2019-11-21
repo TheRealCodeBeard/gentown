@@ -8,7 +8,8 @@ let choose_from = function(list){
 let adjectives = [
     "small","lucious","wind-swept","dank","grimey","happy",
     "hope-filled","dull","sad","glossy","hateful","dangerous",
-    "mysterious","fair","fine","keen","sharp","deadly"
+    "mysterious","fair","fine","keen","sharp","deadly","terrible",
+    "awful","unkind","unfair"
 ];
 
 let adjective = function(){
