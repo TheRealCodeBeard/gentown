@@ -328,8 +328,8 @@ let get_road_mask = function(map){
 let village_road = function(map){
     let village_1 = find_village(map);
     let village_2 = find_village(map,village_1);
+    var graph = new astar.Graph(get_road_mask(map),{ diagonal: false });
     if(village_1 && village_2){
-        var graph = new astar.Graph(get_road_mask(map),{ diagonal: false });
         var start = graph.grid[village_1.y][village_1.x];
         var end = graph.grid[village_2.y][village_2.x];
         var result = astar.astar.search(graph, start, end);
@@ -342,7 +342,7 @@ let village_road = function(map){
     return map;
 };
 
-let generate_village = function(map){
+let generate_villages = function(map){
     let test = (v)=>is_any(v,GROUND,HIGH_GROUND,HILL,GRASS)
     map = seed_element_next_to(map,VILLAGE,test,LAKE,0.02);
     map = extend_element(map,VILLAGE,test,1.0);
@@ -365,7 +365,7 @@ let generated_map = function(size){
     map = generate_grass(map);
     map = generate_trees(map);
     map = generate_sand(map);
-    map = generate_village(map);
+    map = generate_villages(map);
     return map;
 };
 
