@@ -14,7 +14,7 @@ let adjectives = [
     "philosophical","other-worldly","homely","quaint","adorable","agreeable",
     "repulsive","disturbed","jealous","eager","enchanting","expensive",
     "modern","thoughtless","troubled","nasty","frail","fragile","unsightly",
-    "wild","wicked","putrid"
+    "wild","wicked","putrid","nice","friendly","arrogant"
 ];
 
 let adjective = function(){
@@ -33,7 +33,7 @@ let date = function(){
 let leader = function(){
     let type = ["Queen","King","Emperor","Empress","Lord","Lady","Duke","Duchess",
                 "Prince","Princess","Warlord","Hegamon","Minister","Priest","Priestess"
-                ];
+            ];
     let name_start = ["Abra","Folen","Gla","Bo","Hince","Taka","No","Fla",
                     "To","Glisto","Narn","Fmo","Djara","Tin","For","Phi","Be",
                     "Glum","Eri","Sala","Wen","Chri","Ange","Al-","Ri","","Ro",
@@ -117,14 +117,50 @@ let peoples = function(){
     return about;
 };
 
-let generate = function(name_seed){
-    rng = seedrandom(name_seed);
-    let describers = [
+let food = function(){
+    let desire = [" much sought after","n ignored","n avoided","n intriguing"];
+    let food = ["cabbage","potato","egg","rice","salad",
+                    "caserole","duck caviar","high altitude oysters",
+                    "cat pellets","coffee","burnt hair","saussage",
+                    "cactus","gland squeezings"
+            ];
+    let type = ["delicary","ritual offering","drug",
+                "party food","ceremonial food","desert",
+                "main course"
+            ];
+    let about = `A${choose_from(desire)} ${choose_from(type)} here is ${choose_from(food)}`;
+    return about;
+};
+
+let weather = function(){
+    let cadance = ["most","some","occasionnal short periods","short periods"];
+    let weather = ["rains","is clear","is sunny","is cloudy","is cold","is wet"];
+    let about = `For ${choose_from(cadance)} of the year it ${choose_from(weather)}`;
+    return about;
+};
+
+let get_describers = function(){
+    let potential_describers = [
         history,
         peoples,
+        food,
+        weather
     ];
+    let a,b=null;
+    while(!(a&&b)){
+        a = a ? a : Math.floor(rng()*potential_describers.length);
+        let pb = Math.floor(rng()*potential_describers.length);
+        b = (pb===a) ? b : pb;
+    };
+    console.log(mod,"Choices:",a,b);
+    return [potential_describers[a],potential_describers[b]];
+};
+
+let generate = function(name_seed){
+    rng = seedrandom(name_seed);
+    let actual_describers = get_describers();
     var description = `${basic(name_seed)}.`;
-    describers.forEach((d)=>description = `${description}\n${d()}.`);
+    actual_describers.forEach((d)=>description = `${description}\n${d()}.`);
     console.log(mod,"Description Length:",description.length);
     return description;
 }
