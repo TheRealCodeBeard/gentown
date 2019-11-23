@@ -47,7 +47,8 @@ let map_colours =[
     "rgb(150,225,150)",//10 grass
     "rgb(250,250,200)",//11 sand
     "rgb(120,195,120)",//12 trees
-
+    "rgb(185,162,119)",//13 village ground
+    "rgb(165,142,089)" //14 major village ground
 ];
 
 //handy references to the colours above
@@ -64,6 +65,8 @@ const DEEP_LAKE = 9;
 const GRASS = 10;
 const SAND = 11;
 const TREES = 12;
+const VILLAGE = 13;
+const MAJOR_VILLAGE = 14;
 
 //Creates a base map of a single colour specified by index
 let initialise_map = function(size,index){
@@ -153,7 +156,7 @@ let distance_between = function(x,y,ax,ay){
 let seed_element = function(map,el,test,chance){
     chance = chance ? chance : 0.01;
     return apply(map,(clone,x,y)=>if_maybe(
-                                        test(clone[y][x]),
+                                        test(clone[y][x],x,y),
                                         chance,el,clone[y][x]
                                 )
                 );
@@ -290,6 +293,20 @@ let generate_sand = function(map){
     return map;
 };
 
+let generate_village = function(map){
+    let test = (v)=>is_any(v,GROUND,HIGH_GROUND,HILL,GRASS)
+    map = seed_element_next_to(map,VILLAGE,
+        test,
+        LAKE,0.02);
+    map = extend_element(map,VILLAGE,test,1.0);
+    map = extend_element(map,VILLAGE,test,1.0);
+    map = extend_element(map,VILLAGE,test,0.75);
+    map = extend_element(map,VILLAGE,test,0.5);
+    map = fill_in_element(map,VILLAGE,test,2);
+    map = fill_in_other(map,MAJOR_VILLAGE,(v)=>is(v,VILLAGE),VILLAGE);
+    return map;
+};
+
 //This kind of function organises a set of map operations in order
 let generated_map = function(size){
     let map = initialise_map(size,GROUND);
@@ -300,6 +317,7 @@ let generated_map = function(size){
     map = generate_grass(map);
     map = generate_trees(map);
     map = generate_sand(map);
+    map = generate_village(map);
     return map;
 };
 
