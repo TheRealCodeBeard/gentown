@@ -22,13 +22,21 @@ var japanese_starts = ["Kuma","Asa","Haru","Aki","Fuku","Kyo","To","Ba","A","I"]
 var japanese_mids = ["","da","to","ba","ka","ya"];
 var japanese_ends = ["kyo","machi","mura","yama","gawa"," kawa"," shima","jima","be"];
 
-var viking_starts = ["Fj","Dj","Ey","Bol"];
+var viking_starts = ["Fj","Dj","Ey","Bol","Green","Blue","Red","Blood"];
 var viking_mids = ["o","oro","ara","ja","arn","sta"];
-var viking_ends = ["helm","heim","hala","sey","land","lir"];
+var viking_ends = ["helm","heim","hala","sey","land","lir","axe","sword"];
 
 var english_starts = ["Hon","Brid","Beam","Nether","Weather","Scar","West","Black"];
-var english_mids = ["i","er"," over","ling","sea","piddle"];
+var english_mids = ["i","er"," over","ling","sea","piddle",""];
 var english_ends = ["port","ton","ly","mouth"," River"," Old Town","hammer","pool","hinton"];
+
+var german_starts = ["Duss","Berl","Ham","Dres","Fra"];
+var german_mids = ["el","i","","ank"];
+var german_ends = ["dorf","n","berg","schloss","den","furt"];
+
+var french_starts = ["Al","Bor","Au","Bre","Cham","Lim"];
+var french_mids = ["ou","gue","pag","tag","gog","ougog"];
+var french_ends =["ne","sce","re"];
 
 let pick_sets = function()
 {
@@ -36,7 +44,9 @@ let pick_sets = function()
         [web_starts,web_mids,web_ends],
         [japanese_starts,japanese_mids,japanese_ends],
         [viking_starts,viking_mids,viking_ends],
-        [english_starts,english_mids,english_ends]
+        [english_starts,english_mids,english_ends],
+        [german_starts,german_mids,german_ends],
+        [french_starts,french_mids,french_ends]
     ];
     let chosen_set = Math.round(Math.random()*(sets.length-1));
     console.debug(mod,"Set:",chosen_set);
