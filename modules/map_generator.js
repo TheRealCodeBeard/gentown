@@ -1,4 +1,5 @@
 const seedrandom = require('seedrandom');
+const astar = require('./astar.js');
 let mod = "Map Generator |";
 let rng = null;//Probably need a better way of doing this. Class instance?
 
@@ -48,7 +49,8 @@ let map_colours =[
     "rgb(250,250,200)",//11 sand
     "rgb(120,195,120)",//12 trees
     "rgb(185,162,119)",//13 village ground
-    "rgb(165,142,089)" //14 major village ground
+    "rgb(165,142,089)",//14 major village ground
+    "rgb(190,170,120)",//15 road
 ];
 
 //handy references to the colours above
@@ -67,7 +69,7 @@ const SAND = 11;
 const TREES = 12;
 const VILLAGE = 13;
 const MAJOR_VILLAGE = 14;
-
+const ROAD = 15;
 //Creates a base map of a single colour specified by index
 let initialise_map = function(size,index){
     let base_map = new Array(size);
@@ -233,11 +235,13 @@ let seed_extend_fill = function(map,el,test,r){
     return map;
 };
 
-let is_any = function(val,a,b,c,d){//need js parameter magic here
+let is_any = function(val,a,b,c,d,e,f){//need js parameter magic here
      return a && val === a 
             || b && val === b
             || c && val === c
-            || d && val === d;
+            || d && val === d
+            || e && val === e
+            || f && val === f;
 };
 
 /* END OF map operations */
@@ -246,11 +250,11 @@ let generate_land = function(map){
     map = seed_extend_fill(map,LOW_GROUND,(v)=>is(v,GROUND),10);
     map = seed_extend_fill(map,HIGH_GROUND,(v)=>is(v,GROUND),20);
     map = seed_extend_fill(map,HILL,(v)=>is_any(v,GROUND,HIGH_GROUND),15);
-    map = seed_extend_fill(map,MOUNTAIN,(v)=>is_any(v,HIGH_GROUND,HILL),15);
     return map;
 };
 
 let generate_mountain = function(map){
+    map = seed_extend_fill(map,MOUNTAIN,(v)=>is_any(v,HIGH_GROUND,HILL),15);
     map = fill_in_other(map,HIGH_MOUNTAIN,(v)=>is_any(v,HILL,MOUNTAIN),MOUNTAIN);
     map = fill_in_element(map,HIGH_MOUNTAIN,(v)=>is(v,MOUNTAIN),3);
     return map;
@@ -293,17 +297,61 @@ let generate_sand = function(map){
     return map;
 };
 
+let find_village = function(map,not){
+    for(var y=0;y<map.length;y++){
+        for(var x=0;x<map[y].length;x++){
+            if(is(map[y][x],VILLAGE)){
+                if(not){
+                    let d = distance_between(y,x,not.y,not.x)
+                    if(d>5) return {x:x,y:y};
+                } else return {x:x,y:y};
+            }
+        }
+    }
+};
+
+let get_road_mask = function(map){
+    let mask = new Array(map.length);
+    for(var y=0;y<map.length;y++){
+        if(!mask[y])mask[y]=new Array(map[y].length);
+        for(var x=0;x<map[y].length;x++)
+        {
+            mask[y][x] = is_any(map[y][x],
+                GROUND,LOW_GROUND,
+                HIGH_GROUND,HILL,GRASS,
+                VILLAGE,MAJOR_VILLAGE) ? 1 : 0;
+        }
+    }
+    return mask;
+};
+
+let village_road = function(map){
+    let village_1 = find_village(map);
+    let village_2 = find_village(map,village_1);
+    if(village_1 && village_2){
+        var graph = new astar.Graph(get_road_mask(map),{ diagonal: false });
+        var start = graph.grid[village_1.y][village_1.x];
+        var end = graph.grid[village_2.y][village_2.x];
+        var result = astar.astar.search(graph, start, end);
+        result.forEach((p)=>{
+            map[p.x][p.y]=ROAD;
+        });
+        map[village_1.y][village_1.x]=ROAD;
+        map[village_2.y][village_2.x]=ROAD;
+    }
+    return map;
+};
+
 let generate_village = function(map){
     let test = (v)=>is_any(v,GROUND,HIGH_GROUND,HILL,GRASS)
-    map = seed_element_next_to(map,VILLAGE,
-        test,
-        LAKE,0.02);
+    map = seed_element_next_to(map,VILLAGE,test,LAKE,0.02);
     map = extend_element(map,VILLAGE,test,1.0);
     map = extend_element(map,VILLAGE,test,1.0);
     map = extend_element(map,VILLAGE,test,0.75);
     map = extend_element(map,VILLAGE,test,0.5);
     map = fill_in_element(map,VILLAGE,test,2);
     map = fill_in_other(map,MAJOR_VILLAGE,(v)=>is(v,VILLAGE),VILLAGE);
+    map = village_road(map);
     return map;
 };
 
