@@ -38,8 +38,8 @@ let map_colours =[
     "rgb(000,000,000)",//00 black
     "rgb(225,202,159)",//01 ground
     "rgb(215,192,149)",//02 low ground
-    "rgb(245,222,179)",//03 higher ground
-    "rgb(245,222,199)",//04 hill
+    "rgb(230,207,164)",//03 higher ground
+    "rgb(240,217,174)",//04 hill
     "rgb(175,175,175)",//05 mountain
     "rgb(195,195,195)",//06 high mountain
     "rgb(170,170,245)",//07 river
@@ -51,6 +51,7 @@ let map_colours =[
     "rgb(185,162,119)",//13 village ground
     "rgb(165,142,089)",//14 major village ground
     "rgb(190,170,120)",//15 road
+    "rgb(254,254,254)" //16 snow
 ];
 
 //handy references to the colours above
@@ -70,6 +71,7 @@ const TREES = 12;
 const VILLAGE = 13;
 const MAJOR_VILLAGE = 14;
 const ROAD = 15;
+const SNOW = 16;
 //Creates a base map of a single colour specified by index
 let initialise_map = function(size,index){
     let base_map = new Array(size);
@@ -254,9 +256,11 @@ let generate_land = function(map){
 };
 
 let generate_mountain = function(map){
-    map = seed_extend_fill(map,MOUNTAIN,(v)=>is_any(v,HIGH_GROUND,HILL),15);
+    map = seed_extend_fill(map,MOUNTAIN,(v)=>is_any(v,HIGH_GROUND,HILL),30);
     map = fill_in_other(map,HIGH_MOUNTAIN,(v)=>is_any(v,HILL,MOUNTAIN),MOUNTAIN);
     map = fill_in_element(map,HIGH_MOUNTAIN,(v)=>is(v,MOUNTAIN),3);
+    map = fill_in_other(map,SNOW,(v)=>is(v,HIGH_MOUNTAIN),HIGH_MOUNTAIN);
+    map = fill_in_element(map,SNOW,(v)=>is(v,HIGH_MOUNTAIN),2);
     return map;
 };
 
@@ -344,7 +348,7 @@ let village_road = function(map){
 
 let generate_villages = function(map){
     let test = (v)=>is_any(v,GROUND,HIGH_GROUND,HILL,GRASS)
-    map = seed_element_next_to(map,VILLAGE,test,LAKE,0.02);
+    map = seed_element_next_to(map,VILLAGE,test,LAKE,0.05);
     map = extend_element(map,VILLAGE,test,1.0);
     map = extend_element(map,VILLAGE,test,1.0);
     map = extend_element(map,VILLAGE,test,0.75);
