@@ -17,6 +17,9 @@ let adjectives = [
     "wild","wicked","putrid","nice","friendly","arrogant"
 ];
 
+let consonants = ["B","C","D","F","G","H","J","K","L","M","N","P",
+                    "R","S","T","V","W","X","Y","Z"];
+
 let adjective = function(){
     return choose_from(adjectives);
 };
@@ -108,7 +111,7 @@ let peoples = function(){
                     "Loved","Revered","Hunted"
                 ];
     
-    let rate = ["often","never","sometimes","occasionally","once-yearly"];
+    let rate = ["often","never","sometimes","occasionally","once-yearly","continuously","always"];
     let race = [" peoples"," tribe"," elders"," women"," men"," race"," sect",""]
 
     let about = `${choose_from(starts)} for their ${choose_from(activities)}, `;
@@ -130,15 +133,13 @@ let food = function(){
                     "bones","fish","herbs","minerals"
             ];
     let type = ["delicary","ritual offering","drug",
-                "party food","ceremonial food","desert",
+                "party food","ceremonial food","dessert",
                 "main course"
             ];
     let frequency = ["mostly","occasionaly","sometimes","always"];
     
-    let name_start = ["Ha","Ba","Ma","Sa","Ta","Da","Hu","Bu","Mu","Su","Tu","Du",
-                        "He","Be","Me","Se","Te","Reo","Rao","Rio","Riu",
-                        "Seo","Sao","Sio","Siu","Leo","Lao","Lio","Liu",
-                        "T","B","Qu","M"
+    let name_start = ["a","u","e","eo","ao","io","iu","ui","","abo","afo"
+                        ,"rum","ulva","repo","ani","eni","uni","oni"
                     ];
     let name_mid = ["to","ti","tu","te","to","bra","bre","bru","bre","bro","lala",
                     "pa","pi","pu","pe","po","za","zi","zu","ze","zo"
@@ -148,7 +149,7 @@ let food = function(){
                 ];
 
     let about = `A${choose_from(desire)} ${choose_from(type)} `
-    about += `is ${choose_from(name_start)}${choose_from(name_mid)}${choose_from(name_end)}, `;
+    about += `is ${choose_from(consonants)}${choose_from(name_start)}${choose_from(name_mid)}${choose_from(name_end)}, `;
     about += `it is ${choose_from(frequency)} made from ${choose_from(distance)} ${choose_from(food)}`
     return about;
 };
@@ -156,7 +157,28 @@ let food = function(){
 let weather = function(){
     let cadance = ["most","some","occasionnal short periods","short periods"];
     let weather = ["rains","is clear","is sunny","is cloudy","is cold","is wet"];
-    let about = `For ${choose_from(cadance)} of the year it ${choose_from(weather)}`;
+    let compas = ["north","south","east","west",
+                    "north east","north west","south east","south west",
+                    "mountains"
+                ];
+    let strength = ["heavy","light","strong","ghostly"]
+    let type = ["winds blow","storms roll in","sand storms arrive","fog descends"];
+    let about = `For ${choose_from(cadance)} of the year it ${choose_from(weather)} `;
+    about += `and ${choose_from(strength)} ${choose_from(type)} from the ${choose_from(compas)}`;
+    return about;
+};
+
+let music = function(){
+    let vowls = ["a","e","i","o","u"];
+    let cadance = ["occasionally","often","sometimes","continuously"];
+    let times = ["at night","in the morning","over lunch","at festivals",
+                "at funerals","in the evenings","at weekends","after work",
+                "during religious gatherings","around villages","in towns",
+                "on the road","in the fields","in woodland",""];
+    let modernity = ["Traditional","Modern","Futuristic","Ancient"]
+    let instrument = `${choose_from(consonants)}${choose_from(vowls)}${choose_from(vowls)}${choose_from(consonants).toLowerCase()}`
+    let about = `${choose_from(modernity)} ${instrument} instruments `;
+    about += `can be heard ${choose_from(cadance)} ${choose_from(times)}`
     return about;
 };
 
@@ -166,7 +188,8 @@ let get_describers = function(){
         history,
         peoples,
         food,
-        weather
+        weather,
+        music
     ];
     let a,b=null;
     while(!(a&&b)){
@@ -175,6 +198,7 @@ let get_describers = function(){
         b = (pb===a) ? b : pb;
     };
     console.log(mod,"Choices:",a,b);
+    console.log(mod,music());
     return [potential_describers[a],potential_describers[b]];
 };
 
