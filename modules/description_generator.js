@@ -96,14 +96,14 @@ let peoples = function(){
     let names_start = ["Ta","Ma","Da","Kla","Engli","Ge","Ita","Fro","Cro",
                         "Ba","Bi","Bu","Pa","Pi","Pu","Qua","Qui","Qu",
                         "Fu","Fa","Fi","Pro","Gla","Un","A-","Ll","Ka","Ki","Ko",
-                        "E-","Van-","Ie-","Yy","Qin-"
+                        "E-","Van-","Ie-","Yy","Qin-","N"
                     ];
     let names_mid = ["no","gra","fla","offo","deeka","ra","dja","ti","clu","ban",
-                    "ba","un","on","dun","peare","pro","al","","n","i"
+                    "ba","un","on","dun","peare","pro","al","","n","i","o"
                 ];
     let names_end = ["fun","san","brok","boc","lain","ho","crop","po","la",
                     "bun","pun","kun","lun","pol","","rict","sama","dono",
-                    "hal","speare","kens"
+                    "hal","speare","kens","ah"
                 ];
 
     let starts = ["Renowned","Famous","Forgotten","Remembered","Maligned",
@@ -198,7 +198,6 @@ let get_describers = function(){
         b = (pb===a) ? b : pb;
     };
     console.log(mod,"Choices:",a,b);
-    console.log(mod,music());
     return [potential_describers[a],potential_describers[b]];
 };
 
