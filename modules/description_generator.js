@@ -109,26 +109,47 @@ let peoples = function(){
                 ];
     
     let rate = ["often","never","sometimes","occasionally","once-yearly"];
-    let race = ["peoples","tribe","elders","women","men","race","sect",""]
+    let race = [" peoples"," tribe"," elders"," women"," men"," race"," sect",""]
 
     let about = `${choose_from(starts)} for their ${choose_from(activities)}, `;
     let name = choose_from(names_start) + choose_from(names_mid) + choose_from(names_end);
-    about += `the ${name} ${choose_from(race)} are ${choose_from(rate)} described as ${choose_from(adjectives)}`;
+    about += `the ${name}${choose_from(race)} are ${choose_from(rate)} described as ${choose_from(adjectives)}`;
     return about;
 };
 
 let food = function(){
     let desire = [" much sought after","n ignored","n avoided","n intriguing"];
+    let distance = ["local","regional","imported","scavanged",
+                    "fermented","sun-dried","moon-soaked","sand-polished",
+                    "boiled","ground","dried","washed"
+                    ];
     let food = ["cabbage","potato","egg","rice","salad",
                     "caserole","duck caviar","high altitude oysters",
                     "cat pellets","coffee","burnt hair","saussage",
-                    "cactus","gland squeezings"
+                    "cactus","gland squeezings","fruit","vegitables","broth",
+                    "bones","fish","herbs","minerals"
             ];
     let type = ["delicary","ritual offering","drug",
                 "party food","ceremonial food","desert",
                 "main course"
             ];
-    let about = `A${choose_from(desire)} ${choose_from(type)} here is ${choose_from(food)}`;
+    let frequency = ["mostly","occasionaly","sometimes","always"];
+    
+    let name_start = ["Ha","Ba","Ma","Sa","Ta","Da","Hu","Bu","Mu","Su","Tu","Du",
+                        "He","Be","Me","Se","Te","Reo","Rao","Rio","Riu",
+                        "Seo","Sao","Sio","Siu","Leo","Lao","Lio","Liu",
+                        "T","B","Qu","M"
+                    ];
+    let name_mid = ["to","ti","tu","te","to","bra","bre","bru","bre","bro","lala",
+                    "pa","pi","pu","pe","po","za","zi","zu","ze","zo"
+                ];
+    let name_end = ["m","n","l","b","p","t","s","k",
+                "ding","ring","ridge","dy","ty","my"
+                ];
+
+    let about = `A${choose_from(desire)} ${choose_from(type)} `
+    about += `is ${choose_from(name_start)}${choose_from(name_mid)}${choose_from(name_end)}, `;
+    about += `it is ${choose_from(frequency)} made from ${choose_from(distance)} ${choose_from(food)}`
     return about;
 };
 
@@ -141,6 +162,7 @@ let weather = function(){
 
 let get_describers = function(){
     let potential_describers = [
+        leader,
         history,
         peoples,
         food,
@@ -148,8 +170,8 @@ let get_describers = function(){
     ];
     let a,b=null;
     while(!(a&&b)){
-        a = a ? a : Math.floor(rng()*potential_describers.length);
-        let pb = Math.floor(rng()*potential_describers.length);
+        a = a ? a : Math.round(rng()*(potential_describers.length-1));
+        let pb = Math.round(rng()*(potential_describers.length-1));
         b = (pb===a) ? b : pb;
     };
     console.log(mod,"Choices:",a,b);
