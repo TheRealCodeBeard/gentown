@@ -223,6 +223,15 @@ let fill_in_other = function(map,el,test,other){
                 );
 };
 
+let trace = function(map,el,test,adjacent_el){
+    return apply(map,(clone,x,y)=>if_maybe(
+            test(clone[y][x]) 
+            && adjacent_to(map,x,y,adjacent_el),
+            1.0,el,clone[y][x]
+        )
+    );
+}
+
 //Utility function to allow easy repeats of operations on the map
 let repeat = function(times,map,operation,el,base){
     for(var i=0;i<times;i++){ map = operation(map,el,base); }
@@ -261,6 +270,7 @@ let generate_mountain = function(map){
     map = fill_in_element(map,HIGH_MOUNTAIN,(v)=>is(v,MOUNTAIN),3);
     map = fill_in_other(map,SNOW,(v)=>is(v,HIGH_MOUNTAIN),HIGH_MOUNTAIN);
     map = fill_in_element(map,SNOW,(v)=>is(v,HIGH_MOUNTAIN),2);
+    map = trace(map,HILL,(v)=>is_any(v,GROUND,LOW_GROUND,HIGH_GROUND,HILL),MOUNTAIN);
     return map;
 };
 
