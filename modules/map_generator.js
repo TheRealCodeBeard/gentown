@@ -246,26 +246,28 @@ let seed_extend_fill = function(map,el,test,r){
     return map;
 };
 
-let is_any = function(val,a,b,c,d,e,f){//need js parameter magic here
+let is_any = function(val,a,b,c,d,e,f,g,h){//need js parameter magic here
      return a && val === a 
             || b && val === b
             || c && val === c
             || d && val === d
             || e && val === e
-            || f && val === f;
+            || f && val === f
+            || g && val === g
+            || h && val === h;
 };
 
 /* END OF map operations */
 
 let generate_land = function(map){
-    map = seed_extend_fill(map,LOW_GROUND,(v)=>is(v,GROUND),10);
+    map = seed_extend_fill(map,LOW_GROUND,(v)=>is(v,GROUND),11);
     map = seed_extend_fill(map,HIGH_GROUND,(v)=>is(v,GROUND),20);
     map = seed_extend_fill(map,HILL,(v)=>is_any(v,GROUND,HIGH_GROUND),15);
     return map;
 };
 
 let generate_mountain = function(map){
-    map = seed_extend_fill(map,MOUNTAIN,(v)=>is_any(v,HIGH_GROUND,HILL),30);
+    map = seed_extend_fill(map,MOUNTAIN,(v)=>is_any(v,HIGH_GROUND,HILL),25);
     map = fill_in_other(map,HIGH_MOUNTAIN,(v)=>is_any(v,HILL,MOUNTAIN),MOUNTAIN);
     map = fill_in_element(map,HIGH_MOUNTAIN,(v)=>is(v,MOUNTAIN),3);
     map = fill_in_other(map,SNOW,(v)=>is(v,HIGH_MOUNTAIN),HIGH_MOUNTAIN);
@@ -275,8 +277,8 @@ let generate_mountain = function(map){
 };
 
 let generate_lake = function(map){
-    map = seed_element(map,LAKE,(v)=>is(v,LOW_GROUND),0.005);
-    map = repeat(50,map,flood_fill_element,LAKE,(v)=>is(v,LOW_GROUND));
+    map = seed_element(map,LAKE,(v)=>is(v,LOW_GROUND),0.006);
+    map = repeat(37,map,flood_fill_element,LAKE,(v)=>is(v,LOW_GROUND));
     map = fill_in_other(map,DEEP_LAKE,(v)=>is(v,LAKE),LAKE);
     map = fill_in_element(map,DEEP_LAKE,(v)=>is(v,LAKE),2);
     return map;
@@ -295,13 +297,14 @@ let generate_river = function(map){
 
 let generate_grass = function(map){
     map = seed_element_next_to(map,GRASS,(v)=>is_any(v,GROUND,HIGH_GROUND,HILL),LAKE,0.2);
-    map = repeat(15,map,extend_element,GRASS,(v)=>is_any(v,GROUND,HIGH_GROUND,HILL));
+    map = repeat(35,map,extend_element,GRASS,(v)=>is_any(v,GROUND,HIGH_GROUND,HILL));
     map = fill_in_element(map,GRASS,(v)=>is_any(v,GROUND,HIGH_GROUND,HILL),3);
+    map = repeat(100,map,flood_fill_element,GRASS,(v)=>is(v,GROUND));
     return map;
 };
 
 let generate_trees = function(map){
-    map = seed_element(map,TREES,(v)=>is(v,GRASS),0.3);
+    map = seed_element(map,TREES,(v)=>is(v,GRASS),0.4);
     return map;
 };
 
@@ -314,7 +317,7 @@ let generate_sand = function(map){
 let find_village = function(map,not){
     for(var y=0;y<map.length;y++){
         for(var x=0;x<map[y].length;x++){
-            if(is(map[y][x],VILLAGE)){
+            if(is(map[y][x],VILLAGE) && y>10){
                 if(not){
                     let d = distance_between(y,x,not.y,not.x)
                     if(d>5) return {x:x,y:y};
@@ -333,7 +336,9 @@ let get_road_mask = function(map){
             mask[y][x] = is_any(map[y][x],
                 GROUND,LOW_GROUND,
                 HIGH_GROUND,HILL,GRASS,
-                VILLAGE,MAJOR_VILLAGE) ? 1 : 0;
+                VILLAGE,MAJOR_VILLAGE,
+                TREES
+                ) ? 1 : 0;
         }
     }
     return mask;
@@ -347,18 +352,19 @@ let village_road = function(map){
         var start = graph.grid[village_1.y][village_1.x];
         var end = graph.grid[village_2.y][village_2.x];
         var result = astar.astar.search(graph, start, end);
+        if(result.length===0) console.log(mod,"Didn't get a road");
         result.forEach((p)=>{
             map[p.x][p.y]=ROAD;
         });
-        map[village_1.y][village_1.x]=ROAD;
-        map[village_2.y][village_2.x]=ROAD;
-    }
+        map[village_1.y][village_1.x]=MAJOR_VILLAGE;
+        map[village_2.y][village_2.x]=MAJOR_VILLAGE;
+    } else console.log(mod,"Didn't get two villages");
     return map;
 };
 
 let generate_villages = function(map){
     let test = (v)=>is_any(v,GROUND,HIGH_GROUND,HILL,GRASS)
-    map = seed_element_next_to(map,VILLAGE,test,LAKE,0.05);
+    map = seed_element_next_to(map,VILLAGE,test,LAKE,0.1);
     map = extend_element(map,VILLAGE,test,1.0);
     map = extend_element(map,VILLAGE,test,1.0);
     map = extend_element(map,VILLAGE,test,0.75);
