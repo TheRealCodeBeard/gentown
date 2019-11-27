@@ -4,6 +4,11 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+lerna-debug.log*
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
 
 # Runtime data
 pids
@@ -56,6 +61,35 @@ typings/
 
 # dotenv environment variables file
 .env
+.env.test
 
 # next.js build output
 .next
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+
+# nuxt.js build output
+.nuxt
+
+# vuepress build output
+.vuepress/dist
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TypeScript output
+dist
+out
+
+# Azure Functions artifacts
+bin
+obj
+appsettings.json
+local.settings.json

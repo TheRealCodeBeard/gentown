@@ -19,6 +19,7 @@ let adjectives = [
 
 let consonants = ["B","C","D","F","G","H","J","K","L","M","N","P",
                     "R","S","T","V","W","X","Y","Z"];
+let vowls = ["a","e","i","o","u"];
 
 let adjective = function(){
     return choose_from(adjectives);
@@ -169,7 +170,6 @@ let weather = function(){
 };
 
 let music = function(){
-    let vowls = ["a","e","i","o","u"];
     let cadance = ["occasionally","often","sometimes","continuously"];
     let times = ["at night","in the morning","over lunch","at festivals",
                 "at funerals","in the evenings","at weekends","after work",
@@ -182,6 +182,17 @@ let music = function(){
     return about;
 };
 
+let greeting = function(){
+    let cadance = ["traditional","occasional","morning","evening","rare"];
+    let greeting = `${choose_from(consonants)}${choose_from(vowls)}${choose_from(consonants).toLowerCase()}${choose_from(vowls)}`;
+    let negative = ["sadness","grief","unhappiness","pain"];
+    let positive =["good","godly","sunny",`avoid ${choose_from(negative)} in`];
+    let thing = ["health","day","week","meals","family health","child health"];
+    let meaning = `${choose_from(positive)}`;
+    let about = `A ${choose_from(cadance)} greeting is ${greeting}, meaning ${meaning} ${choose_from(thing)}`;
+    return about;
+};
+
 let get_describers = function(){
     let potential_describers = [
         leader,
@@ -189,7 +200,8 @@ let get_describers = function(){
         peoples,
         food,
         weather,
-        music
+        music,
+        greeting
     ];
     let a,b=null;
     while(!(a&&b)){
@@ -197,6 +209,7 @@ let get_describers = function(){
         let pb = Math.round(rng()*(potential_describers.length-1));
         b = (pb===a) ? b : pb;
     };
+    console.log(mod,greeting());
     console.log(mod,"Choices:",a,b);
     return [potential_describers[a],potential_describers[b]];
 };

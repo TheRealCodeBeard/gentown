@@ -16,7 +16,7 @@ let boarder = function(ctx,size){
 };
 
 
-let generate_image = function(size,colour_map,name,data,out){
+let generate_canvas = function(size,colour_map,name,data){
     const canvas = createCanvas(size.w, size.h);
     const ctx = canvas.getContext('2d');
     console.log(mod,"Canvas W",size.w,"Canvas H",size.h);
@@ -38,8 +38,21 @@ let generate_image = function(size,colour_map,name,data,out){
 
     boarder(ctx,size);
     draw_text(10,10,name,ctx,size);
+    return canvas;
+};
+
+let generate_image = function(size,colour_map,name,data,out){
+    let canvas = generate_canvas(size,colour_map,name,data);
     const stream = canvas.createPNGStream()
     stream.pipe(out);
 };
 
-module.exports = generate_image
+let generate_buffer = function(size,colour_map,name,data){
+    let canvas = generate_canvas(size,colour_map,name,data);
+    return canvas.toBuffer();
+};
+
+module.exports = {
+    generate_image: generate_image,
+    generate_buffer: generate_buffer
+};
