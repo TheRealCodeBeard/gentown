@@ -122,16 +122,19 @@ let peoples = function(){
 };
 
 let food = function(){
-    let desire = [" much sought after","n ignored","n avoided","n intriguing"];
+    let desire = [" much sought after","n ignored","n avoided","n intriguing",
+                    " often consumed"," never wasted"," collected"," festival"
+                ];
     let distance = ["local","regional","imported","scavanged",
                     "fermented","sun-dried","moon-soaked","sand-polished",
-                    "boiled","ground","dried","washed"
+                    "boiled","ground","dried","washed","dampened"
                     ];
     let food = ["cabbage","potato","egg","rice","salad",
                     "caserole","duck caviar","high altitude oysters",
                     "cat pellets","coffee","burnt hair","saussage",
                     "cactus","gland squeezings","fruit","vegitables","broth",
-                    "bones","fish","herbs","minerals"
+                    "bones","fish","herbs","minerals","apples","apricots","berries",
+                    "eye balls","wool","tripe","larks tongues"
             ];
     let type = ["delicary","ritual offering","drug",
                 "party food","ceremonial food","dessert",
@@ -148,10 +151,11 @@ let food = function(){
     let name_end = ["m","n","l","b","p","t","s","k",
                 "ding","ring","ridge","dy","ty","my"
                 ];
+    let preparation = ["in aspic","in vinagar","in jelly","in gravey","on biscuits","","","","","",""];
 
     let about = `A${choose_from(desire)} ${choose_from(type)} `
     about += `is ${choose_from(consonants)}${choose_from(name_start)}${choose_from(name_mid)}${choose_from(name_end)}, `;
-    about += `it is ${choose_from(frequency)} made from ${choose_from(distance)} ${choose_from(food)}`
+    about += `it is ${choose_from(frequency)} made from ${choose_from(distance)} ${choose_from(food)} ${choose_from(preparation)}`
     return about;
 };
 
@@ -183,11 +187,18 @@ let music = function(){
 };
 
 let greeting = function(){
-    let cadance = ["traditional","occasional","morning","evening","rare"];
+    let cadance = ["traditional","occasional","morning","evening","rare",
+                    "common","secretive","formal","informal","causal",
+                    "combative","nautical","tribal","fair-weather",
+                    "ugly","unkind","sarcastic","polite"
+                ];
     let greeting = `${choose_from(consonants)}${choose_from(vowls)}${choose_from(consonants).toLowerCase()}${choose_from(vowls)}`;
-    let negative = ["sadness","grief","unhappiness","pain"];
-    let positive =["good","godly","sunny",`avoid ${choose_from(negative)} in`];
-    let thing = ["health","day","week","meals","family health","child health"];
+    let times = Math.round(rng()*3); 
+    for(var i=0;i<times;i++){greeting+=`${choose_from(consonants).toLowerCase()}${choose_from(vowls)}`;}
+    let negative = ["sadness","grief","unhappiness","pain","storminess","disaster"];
+    let positive =["good","fine","godly","sunny","satisfying"
+                ,`avoid ${choose_from(negative)} in`];
+    let thing = ["health","day","week","meals","family health","child health","weather","seas"];
     let meaning = `${choose_from(positive)}`;
     let about = `A ${choose_from(cadance)} greeting is ${greeting}, meaning ${meaning} ${choose_from(thing)}`;
     return about;
@@ -210,6 +221,7 @@ let get_describers = function(){
         b = (pb===a) ? b : pb;
     };
     console.log(mod,greeting());
+    console.log(mod,food());
     console.log(mod,"Choices:",a,b);
     return [potential_describers[a],potential_describers[b]];
 };
