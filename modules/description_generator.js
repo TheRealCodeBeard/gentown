@@ -14,7 +14,14 @@ let adjectives = [
     "philosophical","other-worldly","homely","quaint","adorable","agreeable",
     "repulsive","disturbed","jealous","eager","enchanting","expensive",
     "modern","thoughtless","troubled","nasty","frail","fragile","unsightly",
-    "wild","wicked","putrid","nice","friendly","arrogant"
+    "wild","wicked","putrid","nice","friendly","arrogant","abhorrent",
+    "appalling","atrocious","awesome","awful","dangerous","dire","disastrous",
+    "disturbing","dreadful","extreme","frightful","ghastly","gruesome",
+    "harrowing","hideous","horrendous","horrid","horrifying","serious",
+    "severe","shocking","unfortunate","unpleasant","awe-inspiring",
+    "beastly","desperate","dreaded","fearful","hateful","inconvenient",
+    "loathsome","monstrous","obnoxious","odious","offensive","petrifying",
+    "poor","repulsive","revolting","rotten","unnerving","unwelcome","vile"
 ];
 
 let consonants = ["B","C","D","F","G","H","J","K","L","M","N","P",
@@ -174,7 +181,11 @@ let weather = function(){
 };
 
 let music = function(){
-    let cadance = ["occasionally","often","sometimes","continuously"];
+    let cadance = ["occasionally","often","sometimes",
+                    "continuously","repeatedly","frequently",
+                    "regularly","consistently","from time to time",
+                    "now and then","on and off","oftentimes"
+                ];
     let times = ["at night","in the morning","over lunch","at festivals",
                 "at funerals","in the evenings","at weekends","after work",
                 "during religious gatherings","around villages","in towns",
@@ -204,26 +215,24 @@ let greeting = function(){
     return about;
 };
 
+let shuffle = function (a) {
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+};
+
 let get_describers = function(){
-    let potential_describers = [
-        leader,
+    let potential_describers = shuffle([
         history,
         peoples,
         food,
         weather,
         music,
         greeting
-    ];
-    let a,b=null;
-    while(!(a&&b)){
-        a = a ? a : Math.round(rng()*(potential_describers.length-1));
-        let pb = Math.round(rng()*(potential_describers.length-1));
-        b = (pb===a) ? b : pb;
-    };
-    console.log(mod,greeting());
-    console.log(mod,food());
-    console.log(mod,"Choices:",a,b);
-    return [potential_describers[a],potential_describers[b]];
+    ]);
+    return [potential_describers.pop(),potential_describers.pop()];
 };
 
 let generate = function(name_seed){
