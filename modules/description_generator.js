@@ -1,4 +1,5 @@
 const seedrandom = require('seedrandom');
+const words_library = require('./words.js');
 let rng = null;
 const mod = "Description | "; 
 
@@ -6,31 +7,10 @@ let choose_from = function(list){
     return list[Math.round(rng()*(list.length-1))];
 };
 
-let adjectives = [
-    "small","lucious","wind-swept","dank","grimey","happy",
-    "hope-filled","dull","sad","glossy","hateful","dangerous",
-    "mysterious","fair","fine","keen","sharp","deadly","terrible",
-    "awful","unkind","unfair","wet","dry","unreal","headonistic","steady",
-    "philosophical","other-worldly","homely","quaint","adorable","agreeable",
-    "repulsive","disturbed","jealous","eager","enchanting","expensive",
-    "modern","thoughtless","troubled","nasty","frail","fragile","unsightly",
-    "wild","wicked","putrid","nice","friendly","arrogant","abhorrent",
-    "appalling","atrocious","awesome","awful","dangerous","dire","disastrous",
-    "disturbing","dreadful","extreme","frightful","ghastly","gruesome",
-    "harrowing","hideous","horrendous","horrid","horrifying","serious",
-    "severe","shocking","unfortunate","unpleasant","awe-inspiring",
-    "beastly","desperate","dreaded","fearful","hateful","inconvenient",
-    "loathsome","monstrous","obnoxious","odious","offensive","petrifying",
-    "poor","repulsive","revolting","rotten","unnerving","unwelcome","vile"
-];
-
-let consonants = ["B","C","D","F","G","H","J","K","L","M","N","P",
-                    "R","S","T","V","W","X","Y","Z"];
-let vowls = ["a","e","i","o","u"];
-
-let adjective = function(){
-    return choose_from(adjectives);
-};
+let adjectives = words_library.adjectives;
+let people_adjectives = words_library.people_adjectives;
+let consonants = words_library.consonants;
+let vowls = words_library.vowls;
 
 let basic = function(name){
     return `Welcome to ${name} (${population()})`
@@ -42,19 +22,13 @@ let date = function(){
 };
 
 let leader = function(){
-    let type = ["Queen","King","Emperor","Empress","Lord","Lady","Duke","Duchess",
-                "Prince","Princess","Warlord","Hegamon","Minister","Priest","Priestess"
-            ];
-    let name_start = ["Abra","Folen","Gla","Bo","Hince","Taka","No","Fla",
-                    "To","Glisto","Narn","Fmo","Djara","Tin","For","Phi","Be",
-                    "Glum","Eri","Sala","Wen","Chri","Ange","Al-","Ri","","Ro",
-                    "Arch"
-    ];
-    let sylables = ["A","I","U","E","O","Ma","Mi","Ba","Bi","Ka","Ki",""];
+    let type = words_library.leader_type;
+    let name_start = words_library.leader_name_start;
+    let sylables =words_library.leader_name_sylable;
     let name_mid = [""," Van " + choose_from(sylables),""," Von " + choose_from(sylables),
                     " Mc" + choose_from(sylables),""," Mac"+ choose_from(sylables)];
-    let name_end = ["sin","do","han","rot","djis","flom","craz","din","n","l","c","dy"];
-    let bodyparts = ["hair","hand","foot","arm","side","crown","sight","eye","fist","boot"];
+    let name_end = words_library.leader_name_ends;
+    let bodyparts = words_library.body_parts;
     let extend = () =>{
         if(rng()<0.4){
             return ` ${choose_from(adjectives)} ${choose_from(bodyparts)}`
@@ -82,7 +56,7 @@ let conclusion = function(){
 
 let history = function(){
     let part1 = `Since the year ${date()}, in the age of ${leader()}, `;
-    let part2 = `this ${adjective()} place ${conclusion()}`; 
+    let part2 = `this ${choose_from(adjectives)} place ${conclusion()}`; 
     return part1 + part2;
 };
 
@@ -113,22 +87,20 @@ let peoples = function(){
                     "bun","pun","kun","lun","pol","","rict","sama","dono",
                     "hal","speare","kens","ah"
                 ];
-
     let starts = ["Renowned","Famous","Forgotten","Remembered","Maligned",
                     "Despised","Ridiculed","Sought","Documented","Hated",
                     "Loved","Revered","Hunted"
                 ];
-    
     let rate = ["often","never","sometimes","occasionally","once-yearly","continuously","always"];
     let race = [" peoples"," tribe"," elders"," women"," men"," race"," sect",""]
-
     let about = `${choose_from(starts)} for their ${choose_from(activities)}, `;
     let name = choose_from(names_start) + choose_from(names_mid) + choose_from(names_end);
-    about += `the ${name}${choose_from(race)} are ${choose_from(rate)} described as ${choose_from(adjectives)}`;
+    about += `the ${name}${choose_from(race)} are ${choose_from(rate)} described as ${choose_from(people_adjectives)}`;
     return about;
 };
 
 let food = function(){
+    let food = words_library.foods;
     let desire = [" much sought after","n ignored","n avoided","n intriguing",
                     " often consumed"," never wasted"," collected"," festival"
                 ];
@@ -136,13 +108,6 @@ let food = function(){
                     "fermented","sun-dried","moon-soaked","sand-polished",
                     "boiled","ground","dried","washed","dampened"
                     ];
-    let food = ["cabbage","potato","egg","rice","salad",
-                    "caserole","duck caviar","high altitude oysters",
-                    "cat pellets","coffee","burnt hair","saussage",
-                    "cactus","gland squeezings","fruit","vegitables","broth",
-                    "bones","fish","herbs","minerals","apples","apricots","berries",
-                    "eye balls","wool","tripe","larks tongues"
-            ];
     let type = ["delicary","ritual offering","drug",
                 "party food","ceremonial food","dessert",
                 "main course"
@@ -158,11 +123,11 @@ let food = function(){
     let name_end = ["m","n","l","b","p","t","s","k",
                 "ding","ring","ridge","dy","ty","my"
                 ];
-    let preparation = ["in aspic","in vinagar","in jelly","in gravey","on biscuits","","","","","",""];
+    let preparation = [" in aspic"," in vinagar"," in jelly"," in gravey"," on biscuits","","","","","",""];
 
     let about = `A${choose_from(desire)} ${choose_from(type)} `
     about += `is ${choose_from(consonants)}${choose_from(name_start)}${choose_from(name_mid)}${choose_from(name_end)}, `;
-    about += `it is ${choose_from(frequency)} made from ${choose_from(distance)} ${choose_from(food)} ${choose_from(preparation)}`
+    about += `it is ${choose_from(frequency)} made from ${choose_from(distance)} ${choose_from(food)}${choose_from(preparation)}`
     return about;
 };
 
@@ -242,6 +207,6 @@ let generate = function(name_seed){
     actual_describers.forEach((d)=>description = `${description}\n${d()}.`);
     console.log(mod,"Description Length:",description.length);
     return description;
-}
+};
 
 module.exports = generate
