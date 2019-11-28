@@ -110,9 +110,12 @@ let food = function(){
                     ];
     let type = ["delicary","ritual offering","drug",
                 "party food","ceremonial food","dessert",
-                "main course"
+                "main course","grave offering","starter",
+                "medicine","pet food"
             ];
-    let frequency = ["mostly","occasionaly","sometimes","always"];
+    let frequency = ["mostly","occasionaly","sometimes","always","sporadically",
+                    "infrequently","periodically","sparingly"
+                    ];
     
     let name_start = ["a","u","e","eo","ao","io","iu","ui","","abo","afo"
                         ,"rum","ulva","repo","ani","eni","uni","oni"
@@ -123,8 +126,10 @@ let food = function(){
     let name_end = ["m","n","l","b","p","t","s","k",
                 "ding","ring","ridge","dy","ty","my"
                 ];
-    let preparation = [" in aspic"," in vinagar"," in jelly"," in gravey"," on biscuits","","","","","",""];
-
+    let preparation = [" in aspic"," in vinagar"," in jelly"," in gravey"," on biscuits",
+                        " on toast"," carefully balanced",
+                        "","","","","",""
+                    ];
     let about = `A${choose_from(desire)} ${choose_from(type)} `
     about += `is ${choose_from(consonants)}${choose_from(name_start)}${choose_from(name_mid)}${choose_from(name_end)}, `;
     about += `it is ${choose_from(frequency)} made from ${choose_from(distance)} ${choose_from(food)}${choose_from(preparation)}`
