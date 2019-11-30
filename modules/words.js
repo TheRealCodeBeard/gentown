@@ -70,13 +70,16 @@ let consonants = ["B","C","D","F","G","H","J","K","L","M","N","P",
 let vowls = ["a","e","i","o","u"];
 
 let leader_type = ["Queen","King","Emperor","Empress","Lord","Lady","Duke","Duchess",
-                "Prince","Princess","Warlord","Hegamon","Minister","Priest","Priestess"
+                "Prince","Princess","Warlord","Hegamon","Minister","Priest","Priestess",
+                "Pope","Fryer"
                 ];
 
 let leader_name_start = ["Abra","Folen","Gla","Bo","Hince","Taka","No","Fla",
                         "To","Glisto","Narn","Fmo","Djara","Tin","For","Phi","Be",
                         "Glum","Eri","Sala","Wen","Chri","Ange","Al-","Ri","","Ro",
-                        "Arch"
+                        "Arch","Hna","Han","Bra","Bi","Ba","Bu",
+                        "Papa","Mama","Fofo","Dopu","Fna","Jna","Dvi","Sisi",
+                        "Popo"
                     ];
 
 let leader_name_sylable =  ["A","I","U","E","O","Ma","Mi","Ba","Bi","Ka","Ki",
