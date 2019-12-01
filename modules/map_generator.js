@@ -40,11 +40,11 @@ let map_colours =[
     "rgb(215,192,149)",//02 low ground
     "rgb(230,207,164)",//03 higher ground
     "rgb(240,217,174)",//04 hill
-    "rgb(175,175,175)",//05 mountain
-    "rgb(195,195,195)",//06 high mountain
+    "rgb(145,145,145)",//05 mountain
+    "rgb(165,165,165)",//06 high mountain
     "rgb(170,170,245)",//07 river
-    "rgb(160,160,235)",//08 lake
-    "rgb(150,150,225)",//09 deep lake
+    "rgb(100,100,245)",//08 lake
+    "rgb(090,090,235)",//09 deep lake
     "rgb(150,225,150)",//10 grass
     "rgb(250,250,200)",//11 sand
     "rgb(135,210,135)",//12 trees

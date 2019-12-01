@@ -79,7 +79,7 @@ let leader_name_start = ["Abra","Folen","Gla","Bo","Hince","Taka","No","Fla",
                         "Glum","Eri","Sala","Wen","Chri","Ange","Al-","Ri","","Ro",
                         "Arch","Hna","Han","Bra","Bi","Ba","Bu",
                         "Papa","Mama","Fofo","Dopu","Fna","Jna","Dvi","Sisi",
-                        "Popo"
+                        "Popo","Zana","Zona","Zuna","Zena","Zane"
                     ];
 
 let leader_name_sylable =  ["A","I","U","E","O","Ma","Mi","Ba","Bi","Ka","Ki",
