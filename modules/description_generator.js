@@ -102,16 +102,17 @@ let peoples = function(){
 let food = function(){
     let food = words_library.foods;
     let desire = [" much sought after","n ignored","n avoided","n intriguing",
-                    " often consumed"," never wasted"," collected"," festival"
+                    " often consumed"," never wasted"," collected"," festival",
+                    " mystical"," misguided"," family celebration", " celebration"
                 ];
     let distance = ["local","regional","imported","scavanged",
                     "fermented","sun-dried","moon-soaked","sand-polished",
                     "boiled","ground","dried","washed","dampened"
                     ];
-    let type = ["delicary","ritual offering","drug",
+    let type = ["delicacy","ritual offering","drug",
                 "party food","ceremonial food","dessert",
                 "main course","grave offering","starter",
-                "medicine","pet food"
+                "medicine","pet food", "animal feed","poison"
             ];
     let frequency = ["mostly","occasionaly","sometimes","always","sporadically",
                     "infrequently","periodically","sparingly"
@@ -138,10 +139,12 @@ let food = function(){
 
 let weather = function(){
     let cadance = ["most","some","occasionnal short periods","short periods"];
-    let weather = ["rains","is clear","is sunny","is cloudy","is cold","is wet"];
+    let weather = ["rains","is clear","is sunny","is cloudy","is cold","is wet",
+                    "is muggy","is humid","is uncomfortably warm","is hot"
+                    ];
     let compas = ["north","south","east","west",
                     "north east","north west","south east","south west",
-                    "mountains"
+                    "mountains","coast","lakes"
                 ];
     let strength = ["heavy","light","strong","ghostly"]
     let type = ["winds blow","storms roll in","sand storms arrive","fog descends"];
