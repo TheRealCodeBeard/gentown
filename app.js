@@ -5,6 +5,7 @@
 
 const generate_name = require("./modules/name_generator.js");
 const generate_map = require("./modules/map_generator.js");
+const generate_sprite_map = require("./modules/sprite_map_generator.js");
 const generate_description = require("./modules/description_generator.js");
 const array_to_image = require("./modules/array_to_image.js");
 const fs = require('fs');
@@ -28,54 +29,9 @@ out.on('finish', () =>  {
     console.log("\n");
 });
 
-let sprite_map = [
-    [08,07,00,00,00,01,01,01,01,01,00,00,00,00,00,00],
-    [00,06,00,00,00,01,02,01,01,01,00,00,00,00,00,00],
-    [00,06,00,00,00,01,16,01,01,01,00,00,00,00,00,00],
-    [00,06,00,00,00,01,17,01,19,01,00,00,00,00,00,00],
-    [00,08,04,04,04,04,11,07,02,01,00,00,00,00,00,00],
-    [00,00,00,00,00,01,18,06,01,01,00,00,00,00,00,00],
-    [00,00,00,00,05,04,11,20,04,07,00,00,00,00,00,00],
-    [00,01,01,01,06,01,01,01,01,06,00,00,00,00,00,00],
-    [00,01,02,01,10,01,12,13,01,21,04,04,04,04,07,00],
-    [00,01,01,01,06,01,14,15,01,06,00,00,00,00,06,00],
-    [00,00,00,00,06,01,01,01,01,06,00,00,00,00,06,00],
-    [00,00,00,00,08,04,04,23,04,09,00,00,00,00,06,00],
-    [00,00,00,00,00,00,00,06,00,00,00,00,00,00,06,00],
-    [00,00,00,00,00,00,00,06,00,00,00,00,00,00,06,00],
-    [00,00,00,00,00,00,00,06,00,00,00,00,00,00,08,04],
-    [00,00,00,00,00,00,00,06,00,00,00,00,00,00,00,00]
-];
-
-let sprites = [
-    "./sprites/black.png",//00
-    "./sprites/grass.png",//01
-    "./sprites/house.png",//02
-    "./sprites/castle.png",//03
-    "./sprites/river1.png",//04
-    "./sprites/river2.png",//05
-    "./sprites/river3.png",//06
-    "./sprites/river4.png",//07
-    "./sprites/river5.png",//08
-    "./sprites/river6.png",//09
-    "./sprites/bridge1.png",//10
-    "./sprites/bridge2.png",//11
-    "./sprites/castleA.png",//12
-    "./sprites/castleB.png",//13
-    "./sprites/castleC.png",//14
-    "./sprites/castleD.png",//15
-    "./sprites/road1.png",//16
-    "./sprites/road2.png",//17
-    "./sprites/road3.png",//18
-    "./sprites/field.png",//19
-    "./sprites/river7.png",//20
-    "./sprites/river8.png",//21
-    "./sprites/river9.png",//22
-    "./sprites/river10.png",//23
-];
-
 const sprite_out = fs.createWriteStream("./images/sprite_map.png");
-array_to_image.generate_image_from_sprites({w:240,h:240},sprites,"Test",sprite_map,sprite_out);
+let sm = generate_sprite_map("test");
+array_to_image.generate_image_from_sprites({w:480,h:480},sm.sprites,"Test",sm.map,sprite_out);
 sprite_out.on('finish', () =>  {
     console.log(mod,'Sprite map created!');
     console.log("\n");

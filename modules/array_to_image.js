@@ -61,21 +61,12 @@ let generate_sprite_canvas = function(size,sprite_map,name,data,on_done){
 
     Promise.all(image_promises).then(values => {
         images=values;
-       // console.log(mod,images);
-
         for(var y=0;y<data.length;y++){
             for(var x=0;x<data[y].length;x++){
                 let image = images[data[y][x]];
-                //console.log(mod,image);
                 ctx.drawImage(image,x*block_w, y*block_h,block_w,block_h);
-                //ctx.strokeStyle = "rgb(255,000,255)";
-                //ctx.setLineDash([1, 2]);
-                //ctx.strokeRect(x*block_w, y*block_h,block_w,block_h);
             }
         }
-    
-        //boarder(ctx,size);
-        //draw_text(10,10,name,ctx,size);
         on_done(canvas);//Why not return a promise here?
     });
 };
