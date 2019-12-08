@@ -23,7 +23,7 @@ let sprite_map = [
 let sprites = [
     "./sprites/black.png",//00
     "./sprites/grass.png",//01
-    "./sprites/house.png",//02
+    "./sprites/house1.png",//02
     "./sprites/castle.png",//03
     "./sprites/river1.png",//04
     "./sprites/river2.png",//05
@@ -46,9 +46,12 @@ let sprites = [
     "./sprites/river9.png",//22
     "./sprites/river10.png",//23
     "./sprites/river0.png",//24
+    "./sprites/tree.png",//25
 ];
 
 const GRASS = 01;
+const TREE = 25;
+const HOUSE = 02;
 const RIVER_LR = 04;
 const RIVER_UD = 06;
 const RIVER_UR = 07;
@@ -56,6 +59,8 @@ const RIVER_UL = 05;
 const RIVER_BL = 08;
 const RIVER_BR = 09;
 const RIVER_ALL = 24;
+const BRIDGE_UD = 10;
+const BRIDGE_LR = 11;
 
 let random_map = function(size){
     let random_image = new Array(size);
@@ -196,10 +201,59 @@ let refine_river = function(map){
     return map;
 };
 
+let add_bridge = function(map){
+    let clone = make_clone(map);
+    let bridge_added =false;
+    for(var y=0;y<clone.length;y++){
+        for(var x=0;x<clone[y].length;x++){
+            if(clone[y][x]===RIVER_LR){
+                if(rng()>0.9){
+                    map[y][x] = BRIDGE_LR;
+                    bridge_added = true;
+                }
+            } else if (clone[y][x]===RIVER_UD){
+                if(rng()>0.9){
+                    map[y][x] = BRIDGE_UD;
+                    bridge_added = true;
+                }
+            }
+            if(bridge_added) return map;
+        }
+    }
+    return map;
+};
+
+let trees = function(map){
+    let clone = make_clone(map);
+    for(var y=0;y<clone.length;y++){
+        for(var x=0;x<clone[y].length;x++){
+            if(clone[y][x]===GRASS){
+                map[y][x]=rng()>0.1?GRASS:TREE;
+            }
+        }
+    }
+    return map;
+};
+
+let houses = function(map){
+    let clone = make_clone(map);
+    for(var y=0;y<clone.length;y++){
+        for(var x=0;x<clone[y].length;x++){
+            if(clone[y][x]===GRASS){
+                map[y][x]=rng()>0.01?GRASS:HOUSE;
+            }
+        }
+    }
+    return map;
+};
+
 let map_generator = function(size){
     let map = initialise(size);
     map = first_river(map);
     map = refine_river(map);
+    map = add_bridge(map);
+    map = trees(map);
+    map = houses(map);
     return map;
 };
 
@@ -208,7 +262,7 @@ let generated_map = function(size){
 };
 
 module.exports =  function(name_seed){
-    let size = 30;
+    let size = 25;
     rng = seedrandom(name_seed);
     return {
         name:name_seed,

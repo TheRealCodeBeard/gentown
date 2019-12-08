@@ -30,7 +30,7 @@ out.on('finish', () =>  {
 });
 
 const sprite_out = fs.createWriteStream("./images/sprite_map.png");
-let sm = generate_sprite_map("test");
+let sm = generate_sprite_map("test3");
 array_to_image.generate_image_from_sprites({w:480,h:480},sm.sprites,"Test",sm.map,sprite_out);
 sprite_out.on('finish', () =>  {
     console.log(mod,'Sprite map created!');
