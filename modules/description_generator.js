@@ -59,7 +59,7 @@ let history = function(){
     let part1_varients = [
         `Since the year ${date()}, in the age of ${leader()}, `,
         `In the age of ${leader()}, since the year ${date()}, `,
-        `${leader()} died in ${date()}, at the age of ${age}, since then `,
+        `${leader()} died in ${date()} at the age of ${age}, since then `,
         `In the year ${date()} ${leader()} was born (died at ${age}), since then `
     ];
     let part1 = choose_from(part1_varients);
@@ -135,7 +135,9 @@ let food = function(){
                 "ding","ring","ridge","dy","ty","my"
                 ];
     let preparation = [" in aspic"," in vinagar"," in jelly"," in gravey"," on biscuits",
-                        " on toast"," carefully balanced",
+                        " on toast"," carefully balanced", " rolled in sugar", " covered in leaves",
+                        " left to develop mold", " rolled in flour", " deep fried", " oven baked",
+                        " pan fried", " chewed", " rolled by children", "rolled by elders",
                         "","","","","",""
                     ];
     let about = `A${choose_from(desire)} ${choose_from(type)} `
@@ -160,6 +162,12 @@ let weather = function(){
     return about;
 };
 
+let initialCap = function(text){
+    if(text.length>1){
+        return  text.slice(0,1).toUpperCase() + text.slice(1);
+    } else return text;
+};
+
 let music = function(){
     let cadance = ["occasionally","often","sometimes",
                     "continuously","repeatedly","frequently",
@@ -173,9 +181,13 @@ let music = function(){
     let modernity = ["Traditional","Modern","Futuristic","Ancient"]
     let type = ["instruments","songs","chants","choral groups","harmonies","recordings"];
     let instrument = `${choose_from(consonants)}${choose_from(vowls)}${choose_from(vowls)}${choose_from(consonants).toLowerCase()}`
-    let about = `${choose_from(modernity)} ${instrument} ${choose_from(type)} `;
-    about += `can be heard ${choose_from(cadance)} ${choose_from(times)}`
-    return about;
+    let options = [
+        `${choose_from(modernity)} ${instrument} ${choose_from(type)} can be heard ${choose_from(cadance)} ${choose_from(times)}`,
+        `${initialCap(choose_from(times))} ${instrument} ${choose_from(type)} are heard ${choose_from(cadance)}`,
+        `"${instrument} ${choose_from(type)}" the people cry, "let us hear them ${choose_from(cadance)}!"`,
+        `${choose_from(modernity)} ${choose_from(type)}, called ${instrument}, ${choose_from(cadance)} echo ${choose_from(times)}`
+    ];
+    return choose_from(options).trim();
 };
 
 let greeting = function(){
