@@ -52,6 +52,7 @@ let sprites = [
     "./sprites/grass4.png",//28
     "./sprites/grass5.png",//29
     "./sprites/tree2.png",//30
+    "./sprites/road0.png",//31
 ];
 
 const GRASS = 01;
@@ -75,6 +76,7 @@ const CASTLE_AL = 12;
 const CASTLE_AR = 13;
 const CASTLE_BL = 14;
 const CASTLE_BR = 15;
+const ROAD0 = 31;
 
 let random_map = function(size){
     let random_image = new Array(size);
@@ -301,7 +303,7 @@ let seed_castle = function(map){
     let clone = make_clone(map);
     for(var y=0;y<clone.length;y++){
         for(var x=0;x<clone[y].length;x++){
-            if(!castle_added && is_inner_map (map,x,y) 
+            if(!castle_added && is_inner_map (map,x,y) && rng()>0.1
                 && clone[y][x]===GRASS && 
                 below(clone,x,y,GRASS) && above(clone,x,y,GRASS) &&
                 left_and_right(clone,x,y,GRASS)
@@ -329,6 +331,52 @@ let refine_castle = function(map){
     return map;
 }
 
+let get_road_mask = function(map){
+    let mask = new Array(map.length);
+    for(var y=0;y<map.length;y++){
+        if(!mask[y])mask[y]=new Array(map[y].length);
+        for(var x=0;x<map[y].length;x++)
+        {
+            mask[y][x] = map[y][x]==GRASS? 1 : 0;
+        }
+    }
+    return mask;
+};
+
+let castle_road = function(map){
+    let clone = make_clone(map);
+    let sx = null;
+    let sy = null;
+    let ex = null;
+    let ey = null;
+    for(var y=0;y<clone.length;y++){
+        for(var x=0;x<clone[y].length;x++){
+            if(clone[y][x]===CASTLE_BR){
+                sx = x;
+                sy = y+1;
+            } else if (clone[y][x]===BRIDGE_LR) {
+                ex = x;
+                ey = y+1;
+            } else if (clone[y][x]===BRIDGE_UD) {
+                ex = x-1;
+                ey = y;
+            }
+        }
+    }
+    var graph = new astar.Graph(get_road_mask(map),{ diagonal: false });
+    var start = graph.grid[sy][sx];
+    var end = graph.grid[ey][ex];
+    map[sy][sx] = ROAD0;
+    map[ey][ex] = ROAD0;
+    var result = astar.astar.search(graph, start, end);
+    result.forEach((p)=>{
+        if(clone[p.x][p.y]===GRASS){
+            map[p.x][p.y]=ROAD0;
+        }
+    });
+    return map;
+};
+
 let map_generator = function(size){
     let map = initialise(size);
     map = first_river(map);
@@ -339,6 +387,7 @@ let map_generator = function(size){
     map = houses(map);
     map = seed_castle(map);
     map = refine_castle(map);
+    map = castle_road(map);
     return map;
 };
 
