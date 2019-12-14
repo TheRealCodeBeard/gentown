@@ -55,7 +55,14 @@ let conclusion = function(){
 };
 
 let history = function(){
-    let part1 = `Since the year ${date()}, in the age of ${leader()}, `;
+    let age = 15 + Math.floor(rng() * 100); 
+    let part1_varients = [
+        `Since the year ${date()}, in the age of ${leader()}, `,
+        `In the age of ${leader()}, since the year ${date()}, `,
+        `${leader()} died in ${date()}, at the age of ${age}, since then `,
+        `In the year ${date()} ${leader()} was born (died at ${age}), since then `
+    ];
+    let part1 = choose_from(part1_varients);
     let part2 = `this ${choose_from(adjectives)} place ${conclusion()}`; 
     return part1 + part2;
 };
@@ -164,8 +171,9 @@ let music = function(){
                 "during religious gatherings","around villages","in towns",
                 "on the road","in the fields","in woodland",""];
     let modernity = ["Traditional","Modern","Futuristic","Ancient"]
+    let type = ["instruments","songs","chants","choral groups","harmonies","recordings"];
     let instrument = `${choose_from(consonants)}${choose_from(vowls)}${choose_from(vowls)}${choose_from(consonants).toLowerCase()}`
-    let about = `${choose_from(modernity)} ${instrument} instruments `;
+    let about = `${choose_from(modernity)} ${instrument} ${choose_from(type)} `;
     about += `can be heard ${choose_from(cadance)} ${choose_from(times)}`
     return about;
 };
