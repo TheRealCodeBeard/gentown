@@ -47,10 +47,20 @@ let sprites = [
     "./sprites/river10.png",//23
     "./sprites/river0.png",//24
     "./sprites/tree.png",//25
+    "./sprites/grass2.png",//26
+    "./sprites/grass3.png",//27
+    "./sprites/grass4.png",//28
+    "./sprites/grass5.png",//29
+    "./sprites/tree2.png",//30
 ];
 
 const GRASS = 01;
+const ROCKS = 26;
+const FLOWERS= 27;
+const FLOWERS2= 28;
+const SCRUB= 29;
 const TREE = 25;
+const TREE2 = 30;
 const HOUSE = 02;
 const RIVER_LR = 04;
 const RIVER_UD = 06;
@@ -61,6 +71,10 @@ const RIVER_BR = 09;
 const RIVER_ALL = 24;
 const BRIDGE_UD = 10;
 const BRIDGE_LR = 11;
+const CASTLE_AL = 12;
+const CASTLE_AR = 13;
+const CASTLE_BL = 14;
+const CASTLE_BR = 15;
 
 let random_map = function(size){
     let random_image = new Array(size);
@@ -223,12 +237,38 @@ let add_bridge = function(map){
     return map;
 };
 
+let get_a_tree = function(){
+    let v = rng();
+    if(v>0.5) return TREE;
+    else return TREE2;
+};
+
 let trees = function(map){
     let clone = make_clone(map);
     for(var y=0;y<clone.length;y++){
         for(var x=0;x<clone[y].length;x++){
             if(clone[y][x]===GRASS){
-                map[y][x]=rng()>0.1?GRASS:TREE;
+                map[y][x]=rng()>0.1?GRASS:get_a_tree();
+            }
+        }
+    }
+    return map;
+};
+
+let get_a_grass = function(){
+    let v = rng();
+    if(v>0.70) return ROCKS;
+    else if (v>0.5) return FLOWERS2;
+    else if (v>0.25) return SCRUB;
+    else return FLOWERS;
+};
+
+let refine_grass = function(map){
+    let clone = make_clone(map);
+    for(var y=0;y<clone.length;y++){
+        for(var x=0;x<clone[y].length;x++){
+            if(clone[y][x]===GRASS){
+                map[y][x]=rng()>0.03?GRASS:get_a_grass();
             }
         }
     }
@@ -247,13 +287,58 @@ let houses = function(map){
     return map;
 };
 
+let is_inner_map = function(map,x,y){
+    let bY = map.length*0.1;
+    let bX = map[0].length*0.1;
+    return y>bY 
+        && x >bX
+        && y<map.length - bY
+        && x<map[0].length -bX;
+};  
+
+let seed_castle = function(map){
+    let castle_added =false;
+    let clone = make_clone(map);
+    for(var y=0;y<clone.length;y++){
+        for(var x=0;x<clone[y].length;x++){
+            if(!castle_added && is_inner_map (map,x,y) 
+                && clone[y][x]===GRASS && 
+                below(clone,x,y,GRASS) && above(clone,x,y,GRASS) &&
+                left_and_right(clone,x,y,GRASS)
+            ){
+                map[y][x] = CASTLE_AL;
+                castle_added = true;
+            }
+            if(castle_added) break;
+        }
+    }
+    return map;
+};
+
+let refine_castle = function(map){
+    let clone = make_clone(map);
+    for(var y=0;y<clone.length;y++){
+        for(var x=0;x<clone[y].length;x++){
+            if(clone[y][x]===CASTLE_AL){
+                map[y][x+1]=CASTLE_AR;
+                map[y+1][x]=CASTLE_BL;
+                map[y+1][x+1]=CASTLE_BR;
+            }
+        }
+    }
+    return map;
+}
+
 let map_generator = function(size){
     let map = initialise(size);
     map = first_river(map);
     map = refine_river(map);
     map = add_bridge(map);
+    map = refine_grass(map);
     map = trees(map);
     map = houses(map);
+    map = seed_castle(map);
+    map = refine_castle(map);
     return map;
 };
 
