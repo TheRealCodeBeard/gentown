@@ -137,7 +137,7 @@ let food = function(){
     let preparation = [" in aspic"," in vinagar"," in jelly"," in gravey"," on biscuits",
                         " on toast"," carefully balanced", " rolled in sugar", " covered in leaves",
                         " left to develop mold", " rolled in flour", " deep fried", " oven baked",
-                        " pan fried", " chewed", " rolled by children", "rolled by elders",
+                        " pan fried", " chewed", " rolled by children", " rolled by elders",
                         "","","","","",""
                     ];
     let about = `A${choose_from(desire)} ${choose_from(type)} `
@@ -156,10 +156,14 @@ let weather = function(){
                     "mountains","coast","lakes"
                 ];
     let strength = ["heavy","light","strong","ghostly"]
-    let type = ["winds blow","storms roll in","sand storms arrive","fog descends"];
+    let type = ["winds blow","gusts blow","storms roll in","sand storms arrive","fog descends"];
     let about = `For ${choose_from(cadance)} of the year it ${choose_from(weather)} `;
     about += `and ${choose_from(strength)} ${choose_from(type)} from the ${choose_from(compas)}`;
-    return about;
+    let options = [
+        about,
+        `From the ${choose_from(compas)} ${choose_from(strength)} ${choose_from(type)}`
+    ];
+    return choose_from(options);
 };
 
 let initialCap = function(text){
